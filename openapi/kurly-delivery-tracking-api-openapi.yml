@@ -1,0 +1,91 @@
+openapi: 3.1.0
+info:
+  title: Kurly Logistics Services (KLS) Open API Authentication Delivery Tracking (배송추적) API
+  version: 1.3.12
+  description: Kurly Logistics Services (KLS) Open API lets contracted shipper clients (화주사) integrate their systems with Kurly's fulfillment (물류대행) and delivery-agency (배송대행) services. This document was reconstructed by API Evangelist from Kurly's own published API reference at https://developers.kurly.com — every path, method, summary and response status below is taken from that reference. Request/response schemas are rendered client-side on the provider's site and are NOT reproduced here; treat the referenced page (externalDocs) as authoritative for payloads.
+  contact:
+    email: logistics-dev@kurlycorp.com
+    url: https://developers.kurly.com/docs/faq
+  x-generated-by: api-evangelist enrichment pipeline
+  x-generated: '2026-07-19'
+  x-source: https://developers.kurly.com/docs/api
+servers:
+- url: https://{host}
+  description: KLS Open API base host. Kurly does not publish the base host publicly; it is issued to contracted shippers together with clientId/secretKey after IP allowlisting.
+  variables:
+    host:
+      default: kls.kurly.com
+      description: Kurly Logistics Services host referenced in the KLS FAQ.
+security: []
+tags:
+- name: Delivery Tracking (배송추적)
+paths:
+  /v1/couriers/{courier}/trackings/{invoiceNumber}:
+    get:
+      operationId: findDeliveryTracking
+      summary: 배송 추적 조회
+      tags:
+      - Delivery Tracking (배송추적)
+      externalDocs:
+        description: KLS API reference
+        url: https://developers.kurly.com/docs/api/%EB%B0%B0%EC%86%A1%EC%B6%94%EC%A0%81/%EB%B0%B0%EC%86%A1-%EC%B6%94%EC%A0%81-%EC%A1%B0%ED%9A%8C/
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: Rate limit exceeded (added to all APIs in KLS docs v1.3.5)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      description: 운송장 번호로 배송 추적 이벤트를 조회합니다. 추적 이벤트가 없는 경우 currentStatus는 null로, trackingEvents는 빈 배열로 반환됩니다. 현재 KURLY(넥스트마일) 택배사만 지원합니다. 3개월 이내의 정보만 조회 가능합니다.
+      parameters:
+      - name: courier
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: invoiceNumber
+        in: path
+        required: true
+        schema:
+          type: string
+      security:
+      - bearerAuth: []
+components:
+  schemas:
+    Error:
+      type: object
+      description: KLS error envelope. Delivery-agency errors carry a `DA` domain prefix (e.g. DA60400, DA60404, DA60500) as of docs v1.3.8.
+      properties:
+        code:
+          type: string
+          description: KLS error code
+        message:
+          type: string
+          description: Human readable error message
+externalDocs:
+  description: KLS Developer Center
+  url: https://developers.kurly.com/

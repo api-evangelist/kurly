@@ -1,0 +1,61 @@
+openapi: 3.1.0
+info:
+  title: Kurly Logistics Services (KLS) Open API Authentication API
+  version: 1.3.12
+  description: Kurly Logistics Services (KLS) Open API lets contracted shipper clients (화주사) integrate their systems with Kurly's fulfillment (물류대행) and delivery-agency (배송대행) services. This document was reconstructed by API Evangelist from Kurly's own published API reference at https://developers.kurly.com — every path, method, summary and response status below is taken from that reference. Request/response schemas are rendered client-side on the provider's site and are NOT reproduced here; treat the referenced page (externalDocs) as authoritative for payloads.
+  contact:
+    email: logistics-dev@kurlycorp.com
+    url: https://developers.kurly.com/docs/faq
+  x-generated-by: api-evangelist enrichment pipeline
+  x-generated: '2026-07-19'
+  x-source: https://developers.kurly.com/docs/api
+servers:
+- url: https://{host}
+  description: KLS Open API base host. Kurly does not publish the base host publicly; it is issued to contracted shippers together with clientId/secretKey after IP allowlisting.
+  variables:
+    host:
+      default: kls.kurly.com
+      description: Kurly Logistics Services host referenced in the KLS FAQ.
+security: []
+tags:
+- name: Authentication
+paths:
+  /auth/token:
+    post:
+      operationId: issueToken
+      summary: 토큰 발급
+      tags:
+      - Authentication
+      externalDocs:
+        description: KLS API reference
+        url: https://developers.kurly.com/docs/api/%EC%9D%B8%EC%A6%9D/%ED%86%A0%ED%81%B0-%EB%B0%9C%EA%B8%89/
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      description: secretKey와 clientId를 통해 인증 토큰을 발급하는 API입니다.
+      security: []
+components:
+  schemas:
+    Error:
+      type: object
+      description: KLS error envelope. Delivery-agency errors carry a `DA` domain prefix (e.g. DA60400, DA60404, DA60500) as of docs v1.3.8.
+      properties:
+        code:
+          type: string
+          description: KLS error code
+        message:
+          type: string
+          description: Human readable error message
+externalDocs:
+  description: KLS Developer Center
+  url: https://developers.kurly.com/
