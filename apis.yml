@@ -1,27 +1,223 @@
 aid: kurly
 name: Kurly
-description: 'Kurly is a company surfaced as a portfolio company of hongshan and added to the API Evangelist
-  network as a stub for enrichment. Sector: technology. This profile is a lead awaiting the enrichment
-  pipeline.'
+description: >-
+  Kurly (컬리, operated by The Farmers Front) is a South Korean online grocery and lifestyle commerce
+  company, known for Market Kurly and its overnight "dawn delivery" (샛별배송) model built on a
+  cold-chain fulfillment network. Kurly Logistics Services (KLS) opens that network to contracted
+  shipper clients (화주사) as a B2B Open API spanning three service families: fulfillment (물류대행),
+  where Kurly holds and ships the shipper's stock, covering goods master, inbound receiving,
+  inventory and ledgers, outbound orders and fulfillment plans; delivery agency (배송대행), where the
+  shipper ships from their own warehouse over Kurly's Nextmile last-mile network; and shared delivery
+  tracking. Access is contract-gated — clientId and secretKey are issued only after IP allowlist
+  registration — and Kurly states as policy that KLS does not push data to external systems, so
+  integrations poll rather than subscribe to webhooks.
 url: https://raw.githubusercontent.com/api-evangelist/kurly/refs/heads/main/apis.yml
+accessModel:
+  pricing: unknown
+  onboarding: self-serve
+  trial: false
+  try_now: false
+  public: false
+  label: Self-serve signup
+  confidence: medium
+  source:
+  - authentication
+  generated: '2026-07-22'
+  method: derived
+image: https://res.kurly.com/icons/favicon-192x192.png
 x-type: company
 x-source: vc-portfolio
 x-backed-by:
 - hongshan
-x-tier: stub
-x-tier-reason: portfolio-lead
+x-tier: profiled
+x-tier-reason: live-api-enriched
 specificationVersion: '0.20'
 created: '2026-07-17'
-modified: '2026-07-17'
+modified: '2026-07-19'
 tags:
 - Company
 - Technology
-apis: []
+- Logistics
+- Fulfillment
+- Supply Chain
+- Delivery
+- Ecommerce
+- Grocery
+- Shipping
+- Order Management
+- Inventory
+- Tracking
+- South Korea
+apis:
+- aid: kurly:kurly-authentication-api
+  name: Kurly Authentication API
+  description: The Authentication API from Kurly — 1 operation(s) for authentication.
+  humanURL: https://developers.kurly.com/docs/api/물류대행
+  baseURL: https://kls.kurly.com
+  tags:
+  - Authentication
+  properties:
+  - type: OpenAPI
+    url: openapi/kurly-authentication-api-openapi.yml
+  - type: Documentation
+    url: https://developers.kurly.com/docs/api/물류대행
+  - type: GettingStarted
+    url: https://developers.kurly.com/docs/guide/물류대행/inbound/입고-정책-가이드
+  - type: Documentation
+    url: https://developers.kurly.com/docs/api/배송대행
+  - type: GettingStarted
+    url: https://developers.kurly.com/docs/guide/배송대행/배송대행-연동-가이드
+  - type: Documentation
+    url: https://developers.kurly.com/docs/api/배송추적
+  - type: GettingStarted
+    url: https://developers.kurly.com/docs/guide/배송추적/배송-추적-API-연동-가이드
+  - type: Authentication
+    url: https://developers.kurly.com/docs/auth
+- aid: kurly:kurly-default-api
+  name: Kurly 배송운영 정책 API
+  description: The 배송운영 정책 API from Kurly — 26 operation(s) for 배송운영 정책.
+  humanURL: https://developers.kurly.com/docs/api/물류대행
+  baseURL: https://kls.kurly.com
+  tags:
+  - 배송운영 정책
+  properties:
+  - type: OpenAPI
+    url: openapi/kurly-default-api-openapi.yml
+  - type: Documentation
+    url: https://developers.kurly.com/docs/api/물류대행
+  - type: GettingStarted
+    url: https://developers.kurly.com/docs/guide/물류대행/inbound/입고-정책-가이드
+  - type: Documentation
+    url: https://developers.kurly.com/docs/api/배송대행
+  - type: GettingStarted
+    url: https://developers.kurly.com/docs/guide/배송대행/배송대행-연동-가이드
+  - type: Documentation
+    url: https://developers.kurly.com/docs/api/배송추적
+  - type: GettingStarted
+    url: https://developers.kurly.com/docs/guide/배송추적/배송-추적-API-연동-가이드
+  - type: Authentication
+    url: https://developers.kurly.com/docs/auth
+- aid: kurly:kurly-delivery-tracking-api
+  name: Kurly Delivery Tracking (배송추적) API
+  description: >-
+    The Delivery Tracking (배송추적) API from Kurly — 1 operation(s) for delivery tracking (배송추적).
+  humanURL: https://developers.kurly.com/docs/api/물류대행
+  baseURL: https://kls.kurly.com
+  tags:
+  - Delivery Tracking (배송추적)
+  properties:
+  - type: OpenAPI
+    url: openapi/kurly-delivery-tracking-api-openapi.yml
+  - type: Documentation
+    url: https://developers.kurly.com/docs/api/물류대행
+  - type: GettingStarted
+    url: https://developers.kurly.com/docs/guide/물류대행/inbound/입고-정책-가이드
+  - type: Documentation
+    url: https://developers.kurly.com/docs/api/배송대행
+  - type: GettingStarted
+    url: https://developers.kurly.com/docs/guide/배송대행/배송대행-연동-가이드
+  - type: Documentation
+    url: https://developers.kurly.com/docs/api/배송추적
+  - type: GettingStarted
+    url: https://developers.kurly.com/docs/guide/배송추적/배송-추적-API-연동-가이드
+  - type: Authentication
+    url: https://developers.kurly.com/docs/auth
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
+
 common:
+# --- identity and developer surface ---
 - type: Website
   url: https://kurly.com
+- type: DeveloperPortal
+  url: https://developers.kurly.com/
+- type: Documentation
+  url: https://developers.kurly.com/docs/intro
+- type: APIReference
+  url: https://developers.kurly.com/docs/api
+- type: GettingStarted
+  url: https://developers.kurly.com/docs/intro
+- type: Support
+  url: https://developers.kurly.com/docs/faq
+- type: Blog
+  url: https://helloworld.kurly.com/
+- type: GitHubOrganization
+  url: https://github.com/thefarmersfront
+- type: SignUp
+  name: KLS API access request (IP allowlist registration)
+  url: https://developers.kurly.com/docs/auth
+- type: Console
+  name: KLS shipper console
+  url: https://kls.kurly.com/
+
+# --- authentication ---
+- type: Authentication
+  url: authentication/kurly-authentication.yml
+
+# --- agent + machine-readable surface ---
+- type: AgenticAccess
+  url: agentic-access/kurly-agentic-access.yml
+- type: MCPServer
+  name: Candidate MCP tool surface (derived, not published by Kurly)
+  url: mcp/kurly-mcp.yml
+- type: LLMsTxt
+  url: llms/kurly-llms.txt
+- type: AgentSkill
+  url: skills/_index.yml
+
+# --- conventions, errors, data ---
+- type: Conventions
+  url: conventions/kurly-conventions.yml
+- type: Idempotency
+  name: requestKey and X-Idempotency-Key idempotency contract
+  url: conventions/kurly-conventions.yml
+- type: ErrorCatalog
+  url: errors/kurly-error-codes.yml
+- type: DataModel
+  url: data-model/kurly-data-model.yml
+- type: Vocabulary
+  url: vocabulary/kurly-vocabulary.yml
+- type: RateLimits
+  url: rate-limits/kurly-rate-limits.yml
+
+# --- lifecycle and change ---
+- type: Lifecycle
+  url: lifecycle/kurly-lifecycle.yml
+- type: ChangeLog
+  url: changelog/kurly-changelog.yml
+- type: ChangeLog
+  name: KLS published changelog
+  url: https://developers.kurly.com/changelog
+- type: Conformance
+  url: conformance/kurly-conformance.yml
+
+# --- testing ---
+- type: Sandbox
+  name: KLS test environment (security-gated, not self-service)
+  url: sandbox/kurly-sandbox.yml
+
+# --- security ---
+- type: DomainSecurity
+  url: security/kurly-domain-security.yml
+- type: WellKnown
+  name: Well-known probe results (no documents published)
+  url: well-known/kurly-well-known.yml
+
+# --- workflows ---
+- type: Arazzo
+  name: Register a delivery-agency order idempotently and follow it to delivery
+  url: arazzo/kurly-delivery-order-to-tracking.yml
+- type: Arazzo
+  name: Book goods inbound to a Kurly centre and monitor receiving to completion
+  url: arazzo/kurly-inbound-receiving-flow.yml
+- type: Arazzo
+  name: Map a product, check stock, order fulfillment in bulk, and read the plan back
+  url: arazzo/kurly-fulfillment-order-flow.yml
+x-enrichment:
+  date: '2026-07-19'
+  status: backfilled
+  pass: local-v1
+  note: backfilled from .gitignore signal + verified work evidence
