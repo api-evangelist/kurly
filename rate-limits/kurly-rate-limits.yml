@@ -1,0 +1,40 @@
+generated: '2026-07-19'
+method: searched
+source: https://developers.kurly.com/changelog/1.3.5
+api: Kurly Logistics Services (KLS) Open API
+published: false
+note: >-
+  Kurly signals rate limiting (a 429 response was added across all KLS APIs in docs v1.3.5,
+  2026-04-14) but publishes no numeric quota, no window, and no rate-limit response headers. Recorded
+  as a signal-only rate-limit posture — the absence of published numbers is real, not an omission in
+  this capture.
+
+signalling:
+  status_code: 429
+  scope: all KLS APIs
+  introduced: '1.3.5'
+  introduced_date: '2026-04-14'
+  headers: []
+  retry_after: unknown
+
+limits: []
+
+batch_limits:
+- operation: createOrdersBulkV2
+  path: POST /api/fulfillment/v2/orders/bulk
+  max_items: 20
+  source: https://developers.kurly.com/changelog/1.3.4
+- operation: cancelOrdersBulkV2
+  path: PUT /api/fulfillment/v2/orders/bulk/cancel
+  max_items: 20
+  source: https://developers.kurly.com/changelog/1.3.4
+- operation: findDeliveryOrdersByRequestKeys
+  path: GET /v1/orders/by-request-keys
+  max_items: 50
+  source: https://developers.kurly.com/changelog/1.3.12
+
+guidance:
+  polling: >-
+    Because KLS does not push data to external systems, Kurly recommends periodic polling. Clients
+    should pace polling against the undocumented 429 threshold and back off on 429.
+  source: https://developers.kurly.com/docs/faq

@@ -1,0 +1,14 @@
+{
+  "repo": "kurly",
+  "feeds": [
+    {
+      "source": "https://developers.kurly.com/docs/faq",
+      "feed_url": "https://developers.kurly.com/docs/faq",
+      "title": "",
+      "saved": 0,
+      "method": "none"
+    }
+  ],
+  "post_count": 0,
+  "fetched": "2026-07-25T15:00:33Z"
+}

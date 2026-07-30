@@ -1,0 +1,133 @@
+arazzo: 1.0.1
+info:
+  title: Kurly fulfillment inbound receiving flow
+  version: 1.0.0
+  description: >-
+    Register a SKU, book it inbound to a Kurly fulfillment centre with an idempotency key, pull the
+    inbound label and transaction specification, then poll request-level status, item-level status
+    and exception reports. Grounded in the operations captured in openapi/.
+sourceDescriptions:
+- name: auth
+  url: ../openapi/kurly-kls-auth-openapi.yml
+  type: openapi
+- name: fulfillment
+  url: ../openapi/kurly-kls-fulfillment-openapi.yml
+  type: openapi
+workflows:
+- workflowId: bookAndMonitorInbound
+  summary: Book goods inbound to a Kurly centre and monitor receiving to completion.
+  description: >-
+    The cancellation window closes as soon as a Kurly operator confirms the request, so cancel
+    decisions must be made while status is 요청완료. Exception reports can be issued after receiving
+    completes, so report polling outlives status polling.
+  inputs:
+    type: object
+    required: [clientId, secretKey, idempotencyKey]
+    properties:
+      clientId: {type: string}
+      secretKey: {type: string}
+      idempotencyKey:
+        type: string
+        description: Value for the X-Idempotency-Key header; reuse on every retry.
+      timestamp:
+        type: string
+        description: Value for the companion X-Timestamp header.
+  steps:
+  - stepId: issueAccessToken
+    operationId: issueToken
+    requestBody:
+      contentType: application/json
+      payload:
+        clientId: $inputs.clientId
+        secretKey: $inputs.secretKey
+    successCriteria:
+    - condition: $statusCode == 200
+    outputs:
+      accessToken: $response.body#/accessToken
+  - stepId: registerSku
+    description: >-
+      Register the goods master. Returns 200 even on partial success — walk the per-item result list
+      rather than trusting the status code.
+    operationId: saveSku
+    parameters:
+    - name: Authorization
+      in: header
+      value: Bearer $steps.issueAccessToken.outputs.accessToken
+    successCriteria:
+    - condition: $statusCode == 200
+  - stepId: searchInboundPlans
+    description: Align the booking with an existing inbound plan where one applies.
+    operationId: searchReceivingPlans
+    parameters:
+    - name: Authorization
+      in: header
+      value: Bearer $steps.issueAccessToken.outputs.accessToken
+    successCriteria:
+    - condition: $statusCode == 200
+  - stepId: createInboundRequest
+    description: >-
+      Book the inbound. Retry with the SAME X-Idempotency-Key. Field-level validation errors identify
+      the offending field (expiry/manufacturing date, quantity, remarks, lot number).
+    operationId: createReceivingRequest
+    parameters:
+    - name: Authorization
+      in: header
+      value: Bearer $steps.issueAccessToken.outputs.accessToken
+    - name: X-Idempotency-Key
+      in: header
+      value: $inputs.idempotencyKey
+    - name: X-Timestamp
+      in: header
+      value: $inputs.timestamp
+    successCriteria:
+    - condition: $statusCode == 200
+  - stepId: downloadInboundLabel
+    description: >-
+      Download the inbound label PDF while the request is still in a downloadable state
+      (확인대기 / 입고대기 / 입고중). Omit the SKU code for all products on the request.
+    operationId: printReceivingLabel
+    parameters:
+    - name: Authorization
+      in: header
+      value: Bearer $steps.issueAccessToken.outputs.accessToken
+    successCriteria:
+    - condition: $statusCode == 200
+  - stepId: downloadSpecification
+    description: Download the transaction specification (거래명세서).
+    operationId: downloadReceivingSpecification
+    parameters:
+    - name: Authorization
+      in: header
+      value: Bearer $steps.issueAccessToken.outputs.accessToken
+    successCriteria:
+    - condition: $statusCode == 200
+  - stepId: pollRequestStatus
+    description: >-
+      Request-level work status — 입고중, 입고완료, or 강제종료. Polled, because KLS pushes nothing.
+    operationId: searchReceivingRequests
+    parameters:
+    - name: Authorization
+      in: header
+      value: Bearer $steps.issueAccessToken.outputs.accessToken
+    successCriteria:
+    - condition: $statusCode == 200
+  - stepId: pollItemStatus
+    description: Item-level work status per SKU — 입고대기, 입고중, 입고완료.
+    operationId: searchReceivingItemStatus
+    parameters:
+    - name: Authorization
+      in: header
+      value: Bearer $steps.issueAccessToken.outputs.accessToken
+    successCriteria:
+    - condition: $statusCode == 200
+  - stepId: pollExceptionReports
+    description: >-
+      Exception reports are issued per issue type and can appear AFTER receiving completes. Reports
+      are immutable — a correction is a void plus a re-issue, so reconcile on report identity.
+    operationId: searchReceivingReports
+    parameters:
+    - name: Authorization
+      in: header
+      value: Bearer $steps.issueAccessToken.outputs.accessToken
+    successCriteria:
+    - condition: $statusCode == 200

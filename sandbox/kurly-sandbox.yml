@@ -1,0 +1,46 @@
+generated: '2026-07-19'
+method: searched
+source: https://developers.kurly.com/docs/faq
+api: Kurly Logistics Services (KLS) Open API
+available: true
+self_service: false
+public_credentials: false
+
+environment:
+  name: KLS test environment
+  host_referenced: kls.kurly.com
+  console: https://kls.kurly.com/
+  note: >-
+    Kurly confirms a test environment exists for kls.kurly.com, but access is contract- and
+    security-gated rather than self-service. No test credentials, magic identifiers, fixture values
+    or simulation tooling are published publicly.
+
+access_requirements:
+- requirement: 보안 교육 수료
+  gloss_en: Complete Kurly security training
+- requirement: 보안 서약서 작성
+  gloss_en: Sign a security pledge / NDA
+- requirement: VPN 및 방화벽 관련 가이드
+  gloss_en: Follow the VPN and firewall guidance
+source_statement: >-
+  "컬리 보안 정책에 따라 테스트 환경의 어드민 계정 제공을 위해 아래 절차를 반드시 이행해주셔야 합니다"
+  — an admin account for the test environment is only provided after the above security steps.
+
+production_access:
+  network_control: IP allowlist
+  process: >-
+    Submit the outbound IP list via Kurly's Google Form; clientId and secretKey are returned within
+    5 business days.
+  form: https://docs.google.com/forms/d/18MuePJjYaalk6KOXF61Mts6hVPJAyDlxndK_Q8SjxBs/edit
+  docs: https://developers.kurly.com/docs/auth
+
+test_values: []
+test_clocks: false
+fixtures: false
+test_value_note: >-
+  No magic test identifiers, test invoice numbers, or simulated tracking values are published. None
+  are invented here.
+
+contact:
+  email: logistics-dev@kurlycorp.com
+  docs: https://developers.kurly.com/docs/faq

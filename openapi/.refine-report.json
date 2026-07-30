@@ -1,0 +1,18 @@
+{
+  "provider": "kurly",
+  "sources": [
+    "kurly-authentication-api-openapi.yml",
+    "kurly-default-api-openapi.yml",
+    "kurly-delivery-tracking-api-openapi.yml"
+  ],
+  "outputs": [
+    "kurly-authentication-api-openapi.yml",
+    "kurly-default-api-openapi.yml",
+    "kurly-delivery-tracking-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [],
+  "skipped": []
+}

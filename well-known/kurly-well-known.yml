@@ -1,0 +1,43 @@
+generated: '2026-07-19'
+method: searched
+probe_date: '2026-07-19'
+note: >-
+  No .well-known discovery documents are published on any Kurly host. Recorded as verified absence.
+  IMPORTANT: developers.kurly.com and kls.kurly.com return HTTP 200 for every .well-known path, but
+  the body is the SPA/redirect catch-all (a 96-byte meta-refresh stub and the 1,888-byte SPA shell
+  respectively), not a discovery document — those 200s must not be read as a hit. kurly.com and
+  www.kurly.com return an honest 404.
+
+hosts:
+- host: https://developers.kurly.com
+  documents:
+  - {path: /.well-known/security.txt, status: 200, present: false, body: spa-catch-all}
+  - {path: /.well-known/openid-configuration, status: 200, present: false, body: spa-catch-all}
+  - {path: /.well-known/oauth-authorization-server, status: 200, present: false, body: spa-catch-all}
+  - {path: /.well-known/api-catalog, status: 200, present: false, body: spa-catch-all}
+  - {path: /.well-known/ai-plugin.json, status: 200, present: false, body: spa-catch-all}
+- host: https://kls.kurly.com
+  documents:
+  - {path: /.well-known/security.txt, status: 200, present: false, body: spa-catch-all}
+  - {path: /.well-known/openid-configuration, status: 200, present: false, body: spa-catch-all}
+  - {path: /.well-known/oauth-authorization-server, status: 200, present: false, body: spa-catch-all}
+  - {path: /.well-known/api-catalog, status: 200, present: false, body: spa-catch-all}
+  - {path: /.well-known/ai-plugin.json, status: 200, present: false, body: spa-catch-all}
+- host: https://kurly.com
+  documents:
+  - {path: /.well-known/security.txt, status: 404, present: false}
+  - {path: /.well-known/openid-configuration, status: 404, present: false}
+  - {path: /.well-known/oauth-authorization-server, status: 404, present: false}
+  - {path: /.well-known/api-catalog, status: 404, present: false}
+  - {path: /.well-known/ai-plugin.json, status: 404, present: false}
+- host: https://www.kurly.com
+  documents:
+  - {path: /.well-known/security.txt, status: 404, present: false}
+  - {path: /.well-known/openid-configuration, status: 404, present: false}
+  - {path: /.well-known/oauth-authorization-server, status: 404, present: false}
+  - {path: /.well-known/api-catalog, status: 404, present: false}
+  - {path: /.well-known/ai-plugin.json, status: 404, present: false}
+
+security_txt: null
+api_catalog: null
+openid_configuration: null

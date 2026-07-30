@@ -1,0 +1,49 @@
+generated: '2026-07-19'
+method: generated
+source: openapi/ + https://developers.kurly.com/docs
+api: Kurly Logistics Services (KLS) Open API
+note: >-
+  Packaged agent operating instructions for the four marquee KLS flows. Every operationId referenced
+  in these skills is verified against the specs in openapi/, which were themselves reconstructed from
+  Kurly's published API reference. Kurly publishes no AGENTS.md or agent skills of its own.
+
+skills:
+- file: kurly-register-delivery-order.md
+  name: Register a Kurly delivery-agency order safely
+  api: openapi/kurly-kls-delivery-agency-openapi.yml
+  domain: delivery-agency
+  operations: [issueToken, createDeliveryOrder, findDeliveryOrdersByRequestKeys, findInvoicePrintData,
+    findDeliveryPolicies]
+  emphasis: requestKey idempotency and the D+1 / grouping / delivery-type registration policy.
+
+- file: kurly-inbound-receiving.md
+  name: Book and track a Kurly inbound receiving request
+  api: openapi/kurly-kls-fulfillment-openapi.yml
+  domain: fulfillment
+  operations: [issueToken, createReceivingRequest, searchReceivingPlans, searchReceivingRequests,
+    searchReceivingItemStatus, searchReceivingReports, cancelReceivingRequest, printReceivingLabel,
+    downloadReceivingSpecification]
+  emphasis: the narrow cancellation window, all-or-nothing bulk cancel, and immutable exception reports.
+
+- file: kurly-fulfillment-order.md
+  name: Send outbound orders to a Kurly fulfillment centre
+  api: openapi/kurly-kls-fulfillment-openapi.yml
+  domain: fulfillment
+  operations: [issueToken, saveSku, updateSku, findSkuList, saveSalesChannelMapping,
+    findSalesChannelMappingList, createOrderV2, createOrdersBulkV2, findOrders, findOperationPlan,
+    findOperationPlansBulk, cancelOrderV2, cancelOrdersBulkV2, findInventories]
+  emphasis: partial-success responses, the 20-item bulk cap, and the removed V1 order APIs.
+
+- file: kurly-track-shipment.md
+  name: Track a Kurly Nextmile shipment
+  api: openapi/kurly-kls-delivery-tracking-openapi.yml
+  domain: delivery-tracking
+  operations: [issueToken, findDeliveryTracking, findInvoicePrintData]
+  emphasis: the 9-state tracking vocabulary, skippable stages, and terminal states.
+
+cross_cutting:
+  auth: Bearer token from POST /auth/token; source IP must be allowlisted with Kurly.
+  events: No webhooks — Kurly does not push to external systems. Poll.
+  rate_limits: 429 across all APIs, no published quota, no rate-limit headers.
+  errors: '{ code, message }; delivery-agency codes carry a DA prefix.'
+  idempotency: requestKey (delivery-agency orders) and X-Idempotency-Key (inbound receiving).

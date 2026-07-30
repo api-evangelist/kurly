@@ -1,0 +1,168 @@
+generated: '2026-07-19'
+method: searched
+source: https://developers.kurly.com/changelog
+api: Kurly Logistics Services (KLS) Open API
+scheme: semver-style documentation versions with dated entries and domain tags
+current_version: 1.3.12
+current_version_date: '2026-06-30'
+first_entry: '2025-08-08'
+feeds:
+- https://developers.kurly.com/changelog/rss.xml
+- https://developers.kurly.com/changelog/atom.xml
+tags:
+- 공통
+- 물류대행
+- 배송대행
+- 배송추적
+- 상품
+- 인증
+- 입고
+- 재고
+- 주문
+note: >-
+  Complete set of published entries as of 2026-07-19 (16 releases). Kurly's live changelog remains
+  the source of truth; each entry links back to its own permalink.
+
+entries:
+- version: 1.3.12
+  date: '2026-06-30'
+  domains: [delivery-agency]
+  breaking: true
+  highlights:
+  - requestKey (요청 식별 키) introduced on delivery-agency order registration — max 50 chars,
+      server-generated when omitted, unique per shipper and non-reusable, suppressing duplicate
+      registration on retry.
+  - Added GET /v1/orders/by-request-keys (up to 50 keys) and POST /v1/orders/cancel/by-request-key.
+  - Cancelling an already-cancelled order is treated as success (idempotent).
+  - clientOrderCode changed from required to optional and may now be duplicated.
+  url: https://developers.kurly.com/changelog/1.3.12
+- version: 1.3.11
+  date: '2026-06-11'
+  domains: [delivery-tracking]
+  breaking: false
+  highlights:
+  - Added a delivery-tracking integration guide documenting the tracking status flow and each
+      status name/code.
+  url: https://developers.kurly.com/changelog/1.3.11
+- version: 1.3.10
+  date: '2026-06-09'
+  domains: [fulfillment]
+  breaking: false
+  highlights:
+  - Added GET /openapi/v1/receiving-request/receiving-label/print — download inbound labels (PDF)
+      by receiving-request code; only in downloadable states.
+  url: https://developers.kurly.com/changelog/1.3.10
+- version: 1.3.9
+  date: '2026-05-28'
+  domains: [delivery-tracking, delivery-agency]
+  breaking: false
+  highlights:
+  - New delivery-tracking domain — GET /v1/couriers/{courier}/trackings/{invoiceNumber} returns
+      tracking events for Kurly Nextmile shipments; usable by both fulfillment and
+      delivery-agency shippers.
+  - The former delivery-agency tracking guide was retired in favour of the new domain.
+  url: https://developers.kurly.com/changelog/1.3.9
+- version: 1.3.8
+  date: '2026-05-21'
+  domains: [delivery-agency]
+  breaking: true
+  highlights:
+  - Delivery-agency error codes gained a DA prefix (60400 → DA60400, 60404 → DA60404,
+      60500 → DA60500). Clients branching on the old codes must remap.
+  url: https://developers.kurly.com/changelog/1.3.8
+- version: 1.3.7
+  date: '2026-05-06'
+  domains: [fulfillment]
+  breaking: false
+  highlights:
+  - Added two inventory ledger (수불부) APIs — GET /api-inventory/v1/ledgers (per SKU) and
+      GET /api-inventory/v1/lot-ledgers (per lot), over a date range.
+  url: https://developers.kurly.com/changelog/1.3.7
+- version: 1.3.6
+  date: '2026-05-06'
+  domains: [delivery-agency, fulfillment]
+  breaking: true
+  highlights:
+  - New delivery-agency (배송대행) domain — order register/lookup/cancel, delivery-policy lookup,
+      and bulk invoice print-data lookup.
+  - Docs restructured into per-domain fulfillment / delivery-agency trees.
+  - Three fulfillment order V1 APIs removed; V2 recommended.
+  url: https://developers.kurly.com/changelog/1.3.6
+- version: 1.3.5
+  date: '2026-04-14'
+  domains: [fulfillment, common]
+  breaking: false
+  highlights:
+  - X-Timestamp and X-Idempotency-Key request headers added to inbound receiving-request
+      registration.
+  - Inbound validation errors broken out per field (expiry/manufacturing date, quantity, remarks,
+      lot number) and per product condition.
+  - A 429 rate-limit response was added across all APIs.
+  url: https://developers.kurly.com/changelog/1.3.5
+- version: 1.3.4
+  date: '2026-04-08'
+  domains: [fulfillment]
+  breaking: false
+  highlights:
+  - Added order register/cancel V2 (single and bulk), max 20 items per bulk call with per-item
+      error detail on failure.
+  - V1 "bulk cancel" renamed to "multi cancel" (endpoint unchanged).
+  url: https://developers.kurly.com/changelog/1.3.4
+- version: 1.3.3
+  date: '2026-03-13'
+  domains: [fulfillment]
+  breaking: false
+  highlights:
+  - New goods domain — SKU register/update/lookup and sales-channel mapping register/update/lookup.
+  - Added a goods policy integration guide.
+  url: https://developers.kurly.com/changelog/1.3.3
+- version: 1.3.2
+  date: '2026-03-06'
+  domains: [fulfillment, common]
+  breaking: false
+  highlights:
+  - Added an inbound integration guide covering inbound flow, status flow and report policy.
+  - Documentation usability improvements, including an endpoint copy button.
+  url: https://developers.kurly.com/changelog/1.3.2
+- version: 1.3.1
+  date: '2026-02-25'
+  domains: [fulfillment]
+  breaking: true
+  highlights:
+  - Added six inbound APIs — receiving plan search, receiving-request registration, specification
+      download, receiving-request cancel, item receiving-status search, report search.
+  - Receiving-request listing moved from GET /openapi/v1/receiving-request/list to
+      POST /openapi/v1/receiving-request/search.
+  url: https://developers.kurly.com/changelog/1.3.1
+- version: 1.3.0
+  date: '2026-01-29'
+  domains: [fulfillment]
+  breaking: true
+  highlights:
+  - Order lookup changed from request-body to query-parameter style (pageNumber, pageSize,
+      clientOrderCodes) with a restructured response covering order, orderer, receiver, outbound
+      and delivery.
+  url: https://developers.kurly.com/changelog/1.3.0
+- version: 1.2.0
+  date: '2025-09-30'
+  domains: [fulfillment]
+  breaking: false
+  highlights:
+  - Added the inbound receiving-request list API.
+  url: https://developers.kurly.com/changelog/1.2.0
+- version: 1.1.0
+  date: '2025-09-15'
+  domains: [fulfillment]
+  breaking: false
+  highlights:
+  - Added the inventory lookup API and the bulk order cancel API.
+  - operationTime field added to order-domain APIs.
+  url: https://developers.kurly.com/changelog/1.1.0
+- version: 1.0.0
+  date: '2025-08-08'
+  domains: [common]
+  breaking: false
+  highlights:
+  - KLS Developer Center launched with token issuance, order register (single/bulk), order lookup
+      and operation-plan lookup (single/bulk).
+  url: https://developers.kurly.com/changelog/1.0.0

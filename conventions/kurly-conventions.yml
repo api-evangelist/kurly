@@ -1,0 +1,149 @@
+generated: '2026-07-19'
+method: searched
+source: https://developers.kurly.com/docs/auth
+docs:
+- https://developers.kurly.com/docs/auth
+- https://developers.kurly.com/docs/faq
+- https://developers.kurly.com/docs/guide/배송대행/배송대행-연동-가이드
+- https://developers.kurly.com/changelog
+api: Kurly Logistics Services (KLS) Open API
+note: >-
+  Cross-cutting request/response semantics for the KLS Open API, captured from Kurly's published
+  developer center. Schemas render client-side on developers.kurly.com and are not reproduced here;
+  the linked pages remain authoritative for payload shapes.
+
+authentication:
+  style: bearer-token
+  scheme: 'Authorization: Bearer {AccessToken}'
+  token_endpoint: POST /auth/token
+  credentials: clientId + secretKey
+  onboarding: >-
+    Credentials are not self-service. A prospective shipper submits their outbound IP allowlist via a
+    Google Form; Kurly returns clientId/secretKey within 5 business days.
+  network_control: IP allowlist (required before credentials are issued)
+  docs: https://developers.kurly.com/docs/auth
+  artifact: authentication/kurly-authentication.yml
+
+idempotency:
+  supported: true
+  mechanisms:
+  - name: requestKey
+    kind: request-body-field
+    scope: delivery-agency order registration (POST /v1/orders)
+    max_length: 50
+    required: false
+    server_generated_when_absent: true
+    uniqueness: unique per shipper (화주사); values already used — including cancelled orders — cannot be reused
+    behavior: >-
+      Prevents duplicate registration when the same request is retried (e.g. network retries): the
+      order is registered exactly once. Kurly recommends the shipper generate the value itself, since
+      relying on server generation gives no duplicate-suppression benefit. The same key identifies the
+      order for lookup (GET /v1/orders/by-request-keys) and cancellation
+      (POST /v1/orders/cancel/by-request-key).
+    introduced: docs v1.3.12 (2026-06-30)
+    docs: https://developers.kurly.com/docs/guide/배송대행/배송대행-연동-가이드
+  - name: X-Idempotency-Key
+    kind: request-header
+    scope: fulfillment inbound receiving-request registration
+    companion_header: X-Timestamp
+    introduced: docs v1.3.5 (2026-04-14)
+    docs: https://developers.kurly.com/changelog/1.3.5
+  idempotent_operations:
+  - operation: cancelDeliveryOrderByRequestKey
+    behavior: cancelling an already-cancelled order is treated as success (멱등)
+    source: https://developers.kurly.com/changelog/1.3.12
+
+pagination:
+  style: page-number
+  params:
+  - pageNumber
+  - pageSize
+  applies_to: fulfillment order lookup (GET /api/fulfillment/v1/orders)
+  introduced: docs v1.3.0 (2026-01-29) — moved from request-body to query-parameter style
+  source: https://developers.kurly.com/changelog/1.3.0
+
+batching:
+  supported: true
+  limits:
+  - operation: createOrdersBulkV2
+    max_items: 20
+    partial_failure: per-item error detail (code + message) returned for failed items
+  - operation: cancelOrdersBulkV2
+    max_items: 20
+    partial_failure: per-item error detail (code + message) returned for failed items
+  - operation: findDeliveryOrdersByRequestKeys
+    max_items: 50
+  - operation: cancelReceivingRequest
+    semantics: all-or-nothing — the whole batch is rejected if any single item is not cancellable
+    source: https://developers.kurly.com/docs/guide/물류대행/inbound/입고-정책-가이드
+  partial_success:
+    note: >-
+      SKU registration returns 200 OK even on partial success, with a per-item result list
+      (부분 성공 시에도 200 OK와 내역 반환). Callers must inspect the body, not just the status code.
+    source: https://developers.kurly.com/docs/api/물류대행/상품/상품 등록/save-sku
+
+error_envelope:
+  shape: '{ code, message }'
+  codes: string
+  domain_prefixes:
+  - prefix: DA
+    domain: delivery-agency
+    introduced: docs v1.3.8 (2026-05-21)
+    example_mapping:
+      '60400': DA60400
+      '60404': DA60404
+      '60500': DA60500
+  artifact: errors/kurly-error-codes.yml
+  rfc9457: false
+
+rate_limiting:
+  signalled: true
+  status_code: 429
+  scope: all KLS APIs
+  introduced: docs v1.3.5 (2026-04-14)
+  published_limits: false
+  note: >-
+    Kurly documents a 429 response across the whole API surface but does not publish numeric quotas or
+    rate-limit response headers.
+  artifact: rate-limits/kurly-rate-limits.yml
+
+versioning:
+  scheme: uri-path + versioned documentation
+  api_versions:
+  - v1
+  - v2
+  doc_version: 1.3.12
+  doc_versions_retained: 5
+  note: >-
+    Endpoint versions (v1/v2) sit in the URI path; the developer center is separately versioned
+    (1.3.12 current, with 1.3.11/1.3.10/1.3.9/1.3.8 retained in the version picker).
+  artifact: lifecycle/kurly-lifecycle.yml
+
+events:
+  webhooks: false
+  push: false
+  recommended_pattern: polling
+  statement: >-
+    Kurly states that KLS Open API policy does not support pushing data to external systems, and
+    recommends periodic polling instead ("KLS OpenAPI 정책상 외부 시스템으로의 데이터 push는 지원하지
+    않습니다. 주기적인 polling 방식으로 데이터 수신을 권장드립니다.").
+  source: https://developers.kurly.com/docs/faq
+  note: >-
+    Recorded as a genuine absence — this provider has no event/webhook surface to capture, so no
+    AsyncAPI or Webhooks artifact is emitted.
+
+request_tracing:
+  request_id_header: null
+  note: No request-id / correlation header is documented in the public developer center.
+
+field_expansion:
+  supported: false
+  note: No expansion, sparse-fieldset, or metadata convention is documented publicly.
+
+localization:
+  documentation_language: ko
+  note: The developer center is published in Korean only.
+
+support:
+  email: logistics-dev@kurlycorp.com
+  docs: https://developers.kurly.com/docs/faq

@@ -1,0 +1,316 @@
+openapi: 3.1.0
+info:
+  title: Kurly Logistics Services (KLS) Open API — Delivery Agency (배송대행)
+  version: 1.3.12
+  description: Kurly Logistics Services (KLS) Open API lets contracted shipper clients (화주사) integrate their systems with
+    Kurly's fulfillment (물류대행) and delivery-agency (배송대행) services. This document was reconstructed by API Evangelist from
+    Kurly's own published API reference at https://developers.kurly.com — every path, method, summary and response status
+    below is taken from that reference. Request/response schemas are rendered client-side on the provider's site and are NOT
+    reproduced here; treat the referenced page (externalDocs) as authoritative for payloads.
+  contact:
+    email: logistics-dev@kurlycorp.com
+    url: https://developers.kurly.com/docs/faq
+  x-generated-by: api-evangelist enrichment pipeline
+  x-generated: '2026-07-19'
+  x-source: https://developers.kurly.com/docs/api
+externalDocs:
+  description: KLS Developer Center
+  url: https://developers.kurly.com/
+servers:
+- url: https://{host}
+  description: KLS Open API base host. Kurly does not publish the base host publicly; it is issued to contracted shippers
+    together with clientId/secretKey after IP allowlisting.
+  variables:
+    host:
+      default: kls.kurly.com
+      description: Kurly Logistics Services host referenced in the KLS FAQ.
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: 'Access token issued by POST /auth/token using the clientId/secretKey pair Kurly issues after IP allowlist
+        registration. Sent as `Authorization: Bearer {AccessToken}`.'
+  schemas:
+    Error:
+      type: object
+      description: KLS error envelope. Delivery-agency errors carry a `DA` domain prefix (e.g. DA60400, DA60404, DA60500)
+        as of docs v1.3.8.
+      properties:
+        code:
+          type: string
+          description: KLS error code
+        message:
+          type: string
+          description: Human readable error message
+paths:
+  /api/delivery-agency/v1/delivery-policies:
+    post:
+      operationId: findDeliveryPolicies
+      summary: 배송서비스 목록 조회 API
+      tags:
+      - 배송운영 정책
+      externalDocs:
+        description: KLS API reference
+        url: https://developers.kurly.com/docs/api/%EB%B0%B0%EC%86%A1%EB%8C%80%ED%96%89/%EB%B0%B0%EC%86%A1%EC%9A%B4%EC%98%81%20%EC%A0%95%EC%B1%85/%EB%B0%B0%EC%86%A1%EC%9A%B4%EC%98%81%20%EC%A0%95%EC%B1%85%20%EC%A1%B0%ED%9A%8C/%EB%B0%B0%EC%86%A1%EC%84%9C%EB%B9%84%EC%8A%A4-%EB%AA%A9%EB%A1%9D-%EC%A1%B0%ED%9A%8C-api/
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: Rate limit exceeded (added to all APIs in KLS docs v1.3.5)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      description: 주소만 입력하면 화주사의 배송대행 정책에 매칭되는 가용 운영정책을 가장 빠른 배송 가능일 기준으로 조회합니다. deliveryDate는 입력하지 않습니다. oms-order-operation
+        이 가장 빠른 배송 예정일을 자동 결정하여 응답합니다. 응답은 화주사의 배송대행 정책(샛별/하루)에 매칭되는 권역·택배사 옵션만 반환합니다. operation의 night 와 관련된 서비스는 현재 준비중입니다.
+        서비스 이용 가능 시기에 따로 안내가 있을 예정이니 참고 부탁드립니다.
+      security:
+      - bearerAuth: []
+  /v1/invoices/print-data:
+    post:
+      operationId: findInvoicePrintData
+      summary: 운송장 출력 정보 다건 조회
+      tags:
+      - 운송장
+      externalDocs:
+        description: KLS API reference
+        url: https://developers.kurly.com/docs/api/%EB%B0%B0%EC%86%A1%EB%8C%80%ED%96%89/%EC%9A%B4%EC%86%A1%EC%9E%A5/%EC%9A%B4%EC%86%A1%EC%9E%A5%20%EC%B6%9C%EB%A0%A5%20%EC%A0%95%EB%B3%B4%20%EC%A1%B0%ED%9A%8C/%EC%9A%B4%EC%86%A1%EC%9E%A5-%EC%B6%9C%EB%A0%A5-%EC%A0%95%EB%B3%B4-%EB%8B%A4%EA%B1%B4-%EC%A1%B0%ED%9A%8C/
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: Rate limit exceeded (added to all APIs in KLS docs v1.3.5)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      description: 송장 번호 목록으로 송장 출력에 필요한 정보를 조회합니다. 택배사(courier) 값에 따라 invoice 객체의 스키마가 달라집니다. 요청한 화주사 본인의 송장만 반환됩니다. 미존재하거나
+        다른 화주사 소유인 번호는 응답에서 제외됩니다.
+      security:
+      - bearerAuth: []
+  /v1/orders:
+    post:
+      operationId: createDeliveryOrder
+      summary: 주문 등록
+      tags:
+      - 주문
+      externalDocs:
+        description: KLS API reference
+        url: https://developers.kurly.com/docs/api/%EB%B0%B0%EC%86%A1%EB%8C%80%ED%96%89/%EC%A3%BC%EB%AC%B8/%EC%A3%BC%EB%AC%B8%20%EB%93%B1%EB%A1%9D/%EC%A3%BC%EB%AC%B8-%EB%93%B1%EB%A1%9D/
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: Rate limit exceeded (added to all APIs in KLS docs v1.3.5)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      description: 배송대행 주문을 등록합니다. 한 번에 최대 20건까지 등록할 수 있으며, 각 주문의 성공/실패 결과를 개별적으로 반환합니다.
+      security:
+      - bearerAuth: []
+    get:
+      operationId: findDeliveryOrdersByClientOrderCode
+      summary: 주문 다건 조회 - 판매처 주문번호
+      tags:
+      - 주문
+      externalDocs:
+        description: KLS API reference
+        url: https://developers.kurly.com/docs/api/%EB%B0%B0%EC%86%A1%EB%8C%80%ED%96%89/%EC%A3%BC%EB%AC%B8/%EC%A3%BC%EB%AC%B8%20%EC%A1%B0%ED%9A%8C/%EC%A3%BC%EB%AC%B8-%EB%8B%A4%EA%B1%B4-%EC%A1%B0%ED%9A%8C-%ED%8C%90%EB%A7%A4%EC%B2%98-%EC%A3%BC%EB%AC%B8%EB%B2%88%ED%98%B8/
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: Rate limit exceeded (added to all APIs in KLS docs v1.3.5)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      description: 판매처 주문번호 목록으로 주문 정보를 조회합니다. 요청한 화주사 본인의 주문만 반환됩니다. 미존재하거나 다른 화주사 소유인 주문번호는 응답에서 제외됩니다.
+      security:
+      - bearerAuth: []
+  /v1/orders/by-request-keys:
+    get:
+      operationId: findDeliveryOrdersByRequestKeys
+      summary: 주문 다건 조회 - 요청 식별 키
+      tags:
+      - 주문
+      externalDocs:
+        description: KLS API reference
+        url: https://developers.kurly.com/docs/api/%EB%B0%B0%EC%86%A1%EB%8C%80%ED%96%89/%EC%A3%BC%EB%AC%B8/%EC%A3%BC%EB%AC%B8%20%EC%A1%B0%ED%9A%8C/%EC%A3%BC%EB%AC%B8-%EB%8B%A4%EA%B1%B4-%EC%A1%B0%ED%9A%8C-%EC%9A%94%EC%B2%AD-%EC%8B%9D%EB%B3%84-%ED%82%A4/
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: Rate limit exceeded (added to all APIs in KLS docs v1.3.5)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      description: 요청 식별 키 목록으로 주문 정보를 조회합니다. 요청한 화주사 본인의 주문만 반환됩니다. 미존재하거나 다른 화주사 소유인 요청 식별 키는 응답에서 제외됩니다.
+      security:
+      - bearerAuth: []
+  /v1/orders/cancel/by-request-key:
+    post:
+      operationId: cancelDeliveryOrderByRequestKey
+      summary: 주문 취소 - 요청 식별 키
+      tags:
+      - 주문
+      externalDocs:
+        description: KLS API reference
+        url: https://developers.kurly.com/docs/api/%EB%B0%B0%EC%86%A1%EB%8C%80%ED%96%89/%EC%A3%BC%EB%AC%B8/%EC%A3%BC%EB%AC%B8%20%EC%B7%A8%EC%86%8C/%EC%A3%BC%EB%AC%B8-%EC%B7%A8%EC%86%8C-%EC%9A%94%EC%B2%AD-%EC%8B%9D%EB%B3%84-%ED%82%A4/
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: Rate limit exceeded (added to all APIs in KLS docs v1.3.5)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      description: 입력한 요청 식별 키에 해당하는 주문을 단건 취소합니다. 취소할 수 없는 상태(출고·배송 진행 등)면 취소되지 않습니다. 이미 취소된 주문은 성공으로 간주(멱등)합니다.
+      security:
+      - bearerAuth: []
+  /v1/orders/cancel:
+    post:
+      operationId: cancelDeliveryOrderByClientOrderCode
+      summary: 주문 취소 - 판매처 주문번호
+      tags:
+      - 주문
+      externalDocs:
+        description: KLS API reference
+        url: https://developers.kurly.com/docs/api/%EB%B0%B0%EC%86%A1%EB%8C%80%ED%96%89/%EC%A3%BC%EB%AC%B8/%EC%A3%BC%EB%AC%B8%20%EC%B7%A8%EC%86%8C/%EC%A3%BC%EB%AC%B8-%EC%B7%A8%EC%86%8C-%ED%8C%90%EB%A7%A4%EC%B2%98-%EC%A3%BC%EB%AC%B8%EB%B2%88%ED%98%B8/
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: Rate limit exceeded (added to all APIs in KLS docs v1.3.5)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      description: 입력한 판매처 주문번호에 해당하는 배송대행 주문을 취소합니다. 동일 판매처 주문번호의 건이 여러 개면 함께 처리되며, 하나라도 취소할 수 없는 주문(출고·배송 진행 등)이 있으면 전체가
+        취소되지 않습니다. 이미 취소된 주문은 성공으로 간주(멱등)합니다.
+      security:
+      - bearerAuth: []
+security:
+- bearerAuth: []

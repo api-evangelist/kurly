@@ -1,0 +1,500 @@
+generated: '2026-07-19'
+method: generated
+source: openapi/kurly-kls-auth-openapi.yml, openapi/kurly-kls-delivery-agency-openapi.yml, openapi/kurly-kls-delivery-tracking-openapi.yml,
+  openapi/kurly-kls-fulfillment-openapi.yml
+description: Recommended x-agentic-access execution contracts, classified heuristically from
+  the OpenAPI. A governance starting point for exposing this API to AI agents — review and bind
+  audience per deployment. See research/curity/agentic-governance/.
+summary:
+  operations: 33
+  by_action_class:
+    acting: 22
+    connected: 11
+  by_consequence:
+    write: 12
+    physical: 10
+    read: 11
+  human_in_the_loop_required: 0
+operations:
+- path: /auth/token
+  method: post
+  operationId: issueToken
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/delivery-agency/v1/delivery-policies
+  method: post
+  operationId: findDeliveryPolicies
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /v1/invoices/print-data
+  method: post
+  operationId: findInvoicePrintData
+  x-agentic-access:
+    action-class: acting
+    consequence: physical
+    subject: required
+    audience: null
+    token:
+      max-ttl: 300
+      exchange: true
+      purpose-required: true
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /v1/orders
+  method: post
+  operationId: createDeliveryOrder
+  x-agentic-access:
+    action-class: acting
+    consequence: physical
+    subject: required
+    audience: null
+    token:
+      max-ttl: 300
+      exchange: true
+      purpose-required: true
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /v1/orders
+  method: get
+  operationId: findDeliveryOrdersByClientOrderCode
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /v1/orders/by-request-keys
+  method: get
+  operationId: findDeliveryOrdersByRequestKeys
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /v1/orders/cancel/by-request-key
+  method: post
+  operationId: cancelDeliveryOrderByRequestKey
+  x-agentic-access:
+    action-class: acting
+    consequence: physical
+    subject: required
+    audience: null
+    token:
+      max-ttl: 300
+      exchange: true
+      purpose-required: true
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /v1/orders/cancel
+  method: post
+  operationId: cancelDeliveryOrderByClientOrderCode
+  x-agentic-access:
+    action-class: acting
+    consequence: physical
+    subject: required
+    audience: null
+    token:
+      max-ttl: 300
+      exchange: true
+      purpose-required: true
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /v1/couriers/{courier}/trackings/{invoiceNumber}
+  method: get
+  operationId: findDeliveryTracking
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /v1/goods/skus
+  method: post
+  operationId: saveSku
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /v1/goods/skus
+  method: put
+  operationId: updateSku
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /v1/goods/skus
+  method: get
+  operationId: findSkuList
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /v1/goods/sales-channel-mapping
+  method: get
+  operationId: findSalesChannelMappingList
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /v1/goods/sales-channel-mapping
+  method: post
+  operationId: saveSalesChannelMapping
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /v1/goods/sales-channel-mapping
+  method: put
+  operationId: updateSalesChannelMapping
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /openapi/v1/receiving-request/specification
+  method: get
+  operationId: downloadReceivingSpecification
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /openapi/v1/receiving-request
+  method: post
+  operationId: createReceivingRequest
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /openapi/v1/receiving-request/cancel
+  method: patch
+  operationId: cancelReceivingRequest
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /openapi/v1/receiving-request/plans/search
+  method: post
+  operationId: searchReceivingPlans
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /openapi/v1/receiving-request/reports/search
+  method: post
+  operationId: searchReceivingReports
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /openapi/v1/receiving-request/items/status/search
+  method: post
+  operationId: searchReceivingItemStatus
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /openapi/v1/receiving-request/search
+  method: post
+  operationId: searchReceivingRequests
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /openapi/v1/receiving-request/receiving-label/print
+  method: get
+  operationId: printReceivingLabel
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /v1/lot-ledgers
+  method: get
+  operationId: findLotLedgers
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /v1/ledgers
+  method: get
+  operationId: findLedgers
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /v1/inventories
+  method: get
+  operationId: findInventories
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/fulfillment/v2/orders/bulk
+  method: post
+  operationId: createOrdersBulkV2
+  x-agentic-access:
+    action-class: acting
+    consequence: physical
+    subject: required
+    audience: null
+    token:
+      max-ttl: 300
+      exchange: true
+      purpose-required: true
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/fulfillment/v2/orders
+  method: post
+  operationId: createOrderV2
+  x-agentic-access:
+    action-class: acting
+    consequence: physical
+    subject: required
+    audience: null
+    token:
+      max-ttl: 300
+      exchange: true
+      purpose-required: true
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/fulfillment/v1/orders
+  method: get
+  operationId: findOrders
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/fulfillment/v2/orders/bulk/cancel
+  method: put
+  operationId: cancelOrdersBulkV2
+  x-agentic-access:
+    action-class: acting
+    consequence: physical
+    subject: required
+    audience: null
+    token:
+      max-ttl: 300
+      exchange: true
+      purpose-required: true
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/fulfillment/v2/orders/cancel
+  method: put
+  operationId: cancelOrderV2
+  x-agentic-access:
+    action-class: acting
+    consequence: physical
+    subject: required
+    audience: null
+    token:
+      max-ttl: 300
+      exchange: true
+      purpose-required: true
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/fulfillment/v1/operation-plans/bulk
+  method: post
+  operationId: findOperationPlansBulk
+  x-agentic-access:
+    action-class: acting
+    consequence: physical
+    subject: required
+    audience: null
+    token:
+      max-ttl: 300
+      exchange: true
+      purpose-required: true
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/fulfillment/v1/operation-plans
+  method: post
+  operationId: findOperationPlan
+  x-agentic-access:
+    action-class: acting
+    consequence: physical
+    subject: required
+    audience: null
+    token:
+      max-ttl: 300
+      exchange: true
+      purpose-required: true
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required

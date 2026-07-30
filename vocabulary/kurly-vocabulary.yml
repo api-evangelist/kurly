@@ -1,0 +1,167 @@
+generated: '2026-07-19'
+method: searched
+source: https://developers.kurly.com/docs/guide/배송추적/배송-추적-API-연동-가이드
+api: Kurly Logistics Services (KLS) Open API
+note: >-
+  Controlled vocabularies Kurly publishes in its integration guides. Codes and Korean labels are
+  reproduced verbatim; English glosses are API Evangelist translations and are marked as such.
+
+vocabularies:
+
+- name: Delivery tracking status
+  korean_name: 배송 상태
+  applies_to: trackingEvents[] in GET /v1/couriers/{courier}/trackings/{invoiceNumber}
+  ordered: true
+  ordering_note: >-
+    Events accumulate in this order, but not every stage always appears — intermediate stages can be
+    skipped depending on the shipment.
+  source: https://developers.kurly.com/docs/guide/배송추적/배송-추적-API-연동-가이드
+  terms:
+  - code: PREPARE_FOR_DELIVERY
+    label: 배송접수
+    gloss_en: Delivery accepted
+    description: Delivery requested and awaiting pickup.
+  - code: PICK_UP_COMPLETE
+    label: 집화완료
+    gloss_en: Pickup complete
+    description: The pickup driver has taken possession of the goods from the sender.
+  - code: ARRIVAL_AT_THE_PICK_UP_OFFICE
+    label: 집화영업소도착
+    gloss_en: Arrived at pickup branch
+    description: Picked-up goods have arrived at the pickup branch.
+  - code: DEPART_FROM_THE_MAIN_TERMINAL
+    label: 간선TML출발
+    gloss_en: Departed for main terminal
+    description: Departed the pickup branch toward the line-haul terminal.
+  - code: ARRIVAL_AT_THE_MAIN_TERMINAL
+    label: 간선TML도착
+    gloss_en: Arrived at main terminal
+    description: Arrived at the line-haul terminal.
+  - code: ARRIVAL_AT_DELIVERY_OFFICE
+    label: 배송영업소도착
+    gloss_en: Arrived at delivery branch
+    description: Arrived at the branch responsible for final delivery.
+  - code: START_DELIVERY
+    label: 배송출발
+    gloss_en: Out for delivery
+    description: The driver has departed to deliver to the customer.
+  - code: DELIVERY_COMPLETED
+    label: 배송완료
+    gloss_en: Delivered
+    description: Terminal success state — delivered to the customer.
+    terminal: true
+  - code: DELIVERY_FAILED
+    label: 미배송
+    gloss_en: Delivery failed
+    description: Terminal failure state — delivery was not completed.
+    terminal: true
+
+- name: Package grouping
+  korean_name: 합포장
+  applies_to: delivery-agency order registration (POST /v1/orders)
+  source: https://developers.kurly.com/docs/guide/배송대행/배송대행-연동-가이드
+  terms:
+  - code: NO_GROUPING
+    gloss_en: No grouping
+    default: true
+    description: Each order ships separately.
+  - code: BY_RECEIVER
+    gloss_en: Group by receiver
+    description: >-
+      Orders for the same receiver are combined into one box. Sameness is judged on delivery date,
+      receiver name, receiver address, receiver contact, carrier and delivery type.
+
+- name: Delivery type
+  korean_name: 배송유형
+  applies_to: delivery-agency order registration (POST /v1/orders)
+  source: https://developers.kurly.com/docs/guide/배송대행/배송대행-연동-가이드
+  selection_rule: >-
+    When not specified, the type is resolved automatically with DAWN taking priority over DAY.
+  terms:
+  - code: DAWN
+    gloss_en: Dawn delivery
+  - code: DAY
+    gloss_en: Daytime delivery
+
+- name: Inbound request status
+  korean_name: 입고 요청 상태
+  applies_to: fulfillment inbound receiving-request lifecycle
+  source: https://developers.kurly.com/docs/guide/물류대행/inbound/입고-정책-가이드
+  terms:
+  - label: 요청완료
+    gloss_en: Requested
+    description: Initial state after the shipper registers an inbound booking.
+    cancellable: true
+  - label: 확인완료
+    gloss_en: Confirmed
+    description: A Kurly operator has reviewed and approved the booking.
+    cancellable: false
+  - label: 요청취소
+    gloss_en: Cancelled
+    description: Withdrawn by the shipper, or rejected by a Kurly operator.
+    cancellable: false
+
+- name: Inbound work status (request level)
+  korean_name: 입고 요청별 작업 상태
+  applies_to: fulfillment inbound master record
+  source: https://developers.kurly.com/docs/guide/물류대행/inbound/입고-정책-가이드
+  terms:
+  - label: 입고중
+    gloss_en: Receiving in progress
+    description: Inspection has begun at the centre.
+  - label: 입고완료
+    gloss_en: Receiving complete
+    description: >-
+      All items on the inbound number have been inspected. Reports may still be issued after
+      completion — report status is tracked independently.
+  - label: 강제종료
+    gloss_en: Force closed
+    description: Work was closed out manually due to an exception such as missing goods.
+
+- name: Inbound work status (item level)
+  korean_name: 상품별 작업 상태
+  applies_to: fulfillment inbound detail record
+  source: https://developers.kurly.com/docs/guide/물류대행/inbound/입고-정책-가이드
+  terms:
+  - label: 입고대기
+    gloss_en: Awaiting receipt
+    description: Requested, but inspection of this item has not started.
+  - label: 입고중
+    gloss_en: Receiving in progress
+    description: Inspection and system entry are under way for this item.
+  - label: 입고완료
+    gloss_en: Receiving complete
+    description: Inspection of this item is complete.
+
+- name: Inbound report status
+  korean_name: 리포트 상태
+  applies_to: fulfillment inbound exception reports
+  source: https://developers.kurly.com/docs/guide/물류대행/inbound/입고-정책-가이드
+  terms:
+  - label: 리포트 미발행
+    gloss_en: No report issued
+    description: No exception was found during receiving.
+  - label: 리포트 발행
+    gloss_en: Report issued
+    description: A Kurly operator recorded an issue with required actions and photos.
+  - label: 리포트 처리완료
+    gloss_en: Report resolved
+    description: The issue was actioned and the resolution recorded — final confirmed state.
+  - label: 리포트 발행취소
+    gloss_en: Report voided
+    description: >-
+      Kurly invalidated the report because it was erroneous or duplicated. Issued reports are
+      immutable — corrections are made by voiding and re-issuing.
+
+- name: Courier
+  korean_name: 배송사
+  applies_to: courier path parameter and delivery-agency order registration
+  source: https://developers.kurly.com/changelog/1.3.6
+  terms:
+  - label: 컬리 넥스트마일
+    gloss_en: Kurly Nextmile
+    abbreviation: NM
+  - label: CJ대한통운
+    gloss_en: CJ Logistics
+  - label: 롯데택배
+    gloss_en: Lotte Global Logistics

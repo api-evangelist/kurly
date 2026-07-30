@@ -1,0 +1,39 @@
+generated: '2026-07-19'
+method: derived
+source: arazzo/*.yml
+api: Kurly Logistics Services (KLS) Open API
+note: >-
+  Native Arazzo workflows stitching KLS operations into the provider's real multi-step use cases.
+  Every operationId is verified against the specs in openapi/.
+
+workflows:
+- file: kurly-delivery-order-to-tracking.yml
+  workflowId: registerDeliveryOrderAndTrack
+  title: Register a delivery-agency order idempotently and follow it to delivery
+  summary: >-
+    Token, delivery-policy lookup, requestKey-idempotent order registration, read-back by request
+    key, waybill print data, then polled tracking to a terminal state.
+  domains: [auth, delivery-agency, delivery-tracking]
+  operations: [issueToken, findDeliveryPolicies, createDeliveryOrder,
+    findDeliveryOrdersByRequestKeys, findInvoicePrintData, findDeliveryTracking]
+
+- file: kurly-inbound-receiving-flow.yml
+  workflowId: bookAndMonitorInbound
+  title: Book goods inbound to a Kurly centre and monitor receiving to completion
+  summary: >-
+    Token, SKU registration, inbound plan search, idempotent receiving-request booking, label and
+    specification download, then polled request-level, item-level and exception-report status.
+  domains: [auth, fulfillment]
+  operations: [issueToken, saveSku, searchReceivingPlans, createReceivingRequest,
+    printReceivingLabel, downloadReceivingSpecification, searchReceivingRequests,
+    searchReceivingItemStatus, searchReceivingReports]
+
+- file: kurly-fulfillment-order-flow.yml
+  workflowId: placeFulfillmentOrder
+  title: Map a product, check stock, order fulfillment in bulk, and read the plan back
+  summary: >-
+    Token, sales-channel mapping, inventory check, bulk V2 order registration with per-item failure
+    handling, operation-plan read, paged order reconciliation and ledger review.
+  domains: [auth, fulfillment]
+  operations: [issueToken, saveSalesChannelMapping, findSalesChannelMappingList, findInventories,
+    createOrdersBulkV2, findOperationPlansBulk, findOrders, findLedgers]

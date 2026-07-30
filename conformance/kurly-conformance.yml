@@ -1,0 +1,87 @@
+generated: '2026-07-19'
+method: derived
+source: openapi/ + https://developers.kurly.com/docs
+api: Kurly Logistics Services (KLS) Open API
+note: >-
+  Standards posture derived from Kurly's published reference and guides. Kurly publishes no
+  certification or compliance programme (no trust centre, no SOC 2 / ISO 27001 / PCI claims were
+  found on any Kurly host), so no Compliance pointer is emitted for this provider.
+
+standards:
+- id: oauth2
+  conforms: false
+  evidence: >-
+    Token issuance is a bespoke clientId/secretKey exchange at POST /auth/token, not an OAuth 2.0
+    grant. No authorization server, no scopes, no RFC 6749 flow is documented.
+- id: oidc
+  conforms: false
+  evidence: No OpenID Connect discovery document or ID token is published.
+- id: http-bearer-rfc6750
+  conforms: true
+  evidence: 'Access token is presented as `Authorization: Bearer {AccessToken}` per docs/auth.'
+- id: rfc9457-problem-details
+  conforms: false
+  evidence: >-
+    Errors use a bespoke `{ code, message }` envelope with domain-prefixed string codes
+    (e.g. DA60400), not application/problem+json.
+- id: idempotency
+  conforms: true
+  evidence: >-
+    requestKey on delivery-agency order registration provides exactly-once registration semantics
+    across retries; X-Idempotency-Key header on inbound receiving-request registration (docs v1.3.5);
+    cancelling an already-cancelled order is explicitly treated as success.
+- id: ietf-idempotency-key-header
+  conforms: partial
+  evidence: >-
+    An X-Idempotency-Key header exists on the inbound domain, but it is vendor-prefixed rather than
+    the IETF draft `Idempotency-Key` header, and it is not applied API-wide.
+- id: rate-limit-headers-rfc9239
+  conforms: false
+  evidence: A 429 status is returned across all APIs, but no RateLimit response headers are documented.
+- id: pagination
+  conforms: true
+  evidence: Page-number pagination (pageNumber, pageSize) on fulfillment order lookup since docs v1.3.0.
+- id: rfc8594-sunset-header
+  conforms: false
+  evidence: >-
+    Breaking removals are announced in the dated changelog, but no Sunset or Deprecation header and
+    no formal deprecation policy are published.
+- id: webhooks
+  conforms: false
+  evidence: >-
+    Kurly states that KLS policy does not support pushing data to external systems and recommends
+    polling (docs/faq). Genuine absence of an event surface, not an omission.
+- id: asyncapi
+  conforms: false
+  evidence: No event or streaming surface exists to describe.
+- id: openapi
+  conforms: partial
+  evidence: >-
+    The developer center is built with docusaurus-theme-openapi-docs, so an OpenAPI document exists
+    behind it, but Kurly does not serve the source spec at any public path (probed /openapi.json,
+    /openapi.yaml, /swagger.json, /api.json — all blocked). The specs in openapi/ are an API
+    Evangelist reconstruction from the published reference.
+- id: json
+  conforms: true
+  evidence: All documented request/response payloads are application/json.
+- id: rest
+  conforms: partial
+  evidence: >-
+    Resource-oriented paths with path versioning, but several read operations are modelled as POST
+    /search or POST lookups rather than GET (e.g. POST /openapi/v1/receiving-request/search,
+    POST /api/fulfillment/v1/operation-plans).
+- id: fhir-r4
+  conforms: false
+- id: scim2
+  conforms: false
+- id: odata
+  conforms: false
+- id: fapi
+  conforms: false
+- id: psd2
+  conforms: false
+- id: json-api
+  conforms: false
+
+certifications: []
+compliance_program_published: false

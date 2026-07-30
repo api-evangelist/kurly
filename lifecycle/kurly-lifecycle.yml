@@ -1,0 +1,90 @@
+generated: '2026-07-19'
+method: searched
+source: https://developers.kurly.com/changelog
+api: Kurly Logistics Services (KLS) Open API
+
+versioning:
+  scheme: uri-path
+  api_versions:
+  - v1
+  - v2
+  current_doc_version: 1.3.12
+  doc_version_scheme: semver-style documentation versions
+  docs: https://developers.kurly.com/changelog
+  retained_doc_versions:
+  - 1.3.12
+  - 1.3.11
+  - 1.3.10
+  - 1.3.9
+  - 1.3.8
+  note: >-
+    Kurly versions the developer center itself (1.0.0 → 1.3.12) alongside path-versioned endpoints.
+    Five documentation versions are retained in the site version picker; older versions
+    (1.0.0 – 1.3.7) remain reachable through the changelog archive.
+
+deprecation:
+  policy_url: null
+  sunset_header: false
+  deprecation_header: false
+  policy_published: false
+  practice: >-
+    Kurly does remove and supersede endpoints, and announces it in the dated changelog with a
+    migration recommendation — but publishes no formal deprecation policy, notice period, or
+    RFC 8594 Sunset/Deprecation header support.
+  observed_events:
+  - version: '1.3.6'
+    date: '2026-05-06'
+    change: Three fulfillment order V1 APIs were removed; V2 is recommended.
+    breaking: true
+    source: https://developers.kurly.com/changelog/1.3.6
+  - version: '1.3.8'
+    date: '2026-05-21'
+    change: >-
+      Delivery-agency error codes were re-prefixed with DA (60400 → DA60400); clients branching on
+      the old codes must remap.
+    breaking: true
+    source: https://developers.kurly.com/changelog/1.3.8
+  - version: '1.3.12'
+    date: '2026-06-30'
+    change: >-
+      clientOrderCode changed from required to optional and became non-unique; requestKey introduced
+      as the identifying key. Lookup and cancel operations split by identifier.
+    breaking: true
+    source: https://developers.kurly.com/changelog/1.3.12
+  - version: '1.3.1'
+    date: '2026-02-25'
+    change: >-
+      Inbound request listing moved from GET /openapi/v1/receiving-request/list to
+      POST /openapi/v1/receiving-request/search.
+    breaking: true
+    source: https://developers.kurly.com/changelog/1.3.1
+  - version: '1.3.0'
+    date: '2026-01-29'
+    change: >-
+      Order lookup moved from request-body to query-parameter style, with a restructured response.
+    breaking: true
+    source: https://developers.kurly.com/changelog/1.3.0
+
+deprecated_operations: []
+
+status_page: null
+status_page_note: >-
+  No public status page was found. status.kurly.com and status.kls.kurly.com do not resolve
+  (DNS failure, probed 2026-07-19).
+
+sla:
+  url: null
+  uptime_target: null
+  note: No public SLA or uptime commitment is published in the developer center.
+
+maturity:
+  stage: early
+  statement: >-
+    Kurly describes KLS Open API as being at an early stage with only a subset of APIs available, and
+    invites shippers to request additional endpoints for internal review
+    ("KLS OpenAPI는 현재 초기 단계로 일부 API만 제공되고 있습니다").
+  source: https://developers.kurly.com/docs/faq
+
+support:
+  email: logistics-dev@kurlycorp.com
+  docs: https://developers.kurly.com/docs/faq

@@ -1,0 +1,224 @@
+generated: '2026-07-19'
+method: derived
+status: candidate
+source: openapi/
+note: Kurly publishes no MCP server. This is a candidate tool surface derived one-to-one from the KLS operations
+  captured in openapi/. It is a design starting point, not a Kurly product. Any implementation must carry a shipper's
+  own clientId/secretKey and run from an IP-allowlisted host, since KLS gates access by source IP.
+server:
+  name: kurly-kls
+  title: Kurly Logistics Services (KLS) Open API
+  transport: stdio
+  url: null
+  auth:
+    type: bearer
+    token_endpoint: POST /auth/token
+    credentials:
+    - clientId
+    - secretKey
+    network: source IP must be allowlisted with Kurly
+operational_notes:
+- 'No webhooks: KLS does not push to external systems, so a server must poll.'
+- Respect the undocumented 429 rate limit; back off on 429.
+- Order registration is idempotent via requestKey (delivery-agency) and X-Idempotency-Key (inbound) — a tool that
+  retries MUST reuse the same key, never generate a new one.
+- Bulk order register/cancel cap at 20 items; by-request-keys lookup caps at 50.
+tools:
+- name: cancelDeliveryOrderByClientOrderCode
+  description: 주문 취소 - 판매처 주문번호
+  method: POST
+  path: /v1/orders/cancel
+  source_operation: openapi/kurly-kls-delivery-agency-openapi.yml#cancelDeliveryOrderByClientOrderCode
+  docs: https://developers.kurly.com/docs/api/%EB%B0%B0%EC%86%A1%EB%8C%80%ED%96%89/%EC%A3%BC%EB%AC%B8/%EC%A3%BC%EB%AC%B8%20%EC%B7%A8%EC%86%8C/%EC%A3%BC%EB%AC%B8-%EC%B7%A8%EC%86%8C-%ED%8C%90%EB%A7%A4%EC%B2%98-%EC%A3%BC%EB%AC%B8%EB%B2%88%ED%98%B8/
+- name: cancelDeliveryOrderByRequestKey
+  description: 주문 취소 - 요청 식별 키
+  method: POST
+  path: /v1/orders/cancel/by-request-key
+  source_operation: openapi/kurly-kls-delivery-agency-openapi.yml#cancelDeliveryOrderByRequestKey
+  docs: https://developers.kurly.com/docs/api/%EB%B0%B0%EC%86%A1%EB%8C%80%ED%96%89/%EC%A3%BC%EB%AC%B8/%EC%A3%BC%EB%AC%B8%20%EC%B7%A8%EC%86%8C/%EC%A3%BC%EB%AC%B8-%EC%B7%A8%EC%86%8C-%EC%9A%94%EC%B2%AD-%EC%8B%9D%EB%B3%84-%ED%82%A4/
+- name: cancelOrderV2
+  description: 주문 단건 취소 V2
+  method: PUT
+  path: /api/fulfillment/v2/orders/cancel
+  source_operation: openapi/kurly-kls-fulfillment-openapi.yml#cancelOrderV2
+  docs: https://developers.kurly.com/docs/api/%EB%AC%BC%EB%A5%98%EB%8C%80%ED%96%89/%EC%A3%BC%EB%AC%B8/%EC%A3%BC%EB%AC%B8%20%EC%B7%A8%EC%86%8C/%EC%A3%BC%EB%AC%B8-%EB%8B%A8%EA%B1%B4-%EC%B7%A8%EC%86%8C-v-2/
+- name: cancelOrdersBulkV2
+  description: 주문 다건 취소 V2
+  method: PUT
+  path: /api/fulfillment/v2/orders/bulk/cancel
+  source_operation: openapi/kurly-kls-fulfillment-openapi.yml#cancelOrdersBulkV2
+  docs: https://developers.kurly.com/docs/api/%EB%AC%BC%EB%A5%98%EB%8C%80%ED%96%89/%EC%A3%BC%EB%AC%B8/%EC%A3%BC%EB%AC%B8%20%EC%B7%A8%EC%86%8C/%EC%A3%BC%EB%AC%B8-%EB%8B%A4%EA%B1%B4-%EC%B7%A8%EC%86%8C-v-2/
+- name: cancelReceivingRequest
+  description: 입고 요청 취소
+  method: PATCH
+  path: /openapi/v1/receiving-request/cancel
+  source_operation: openapi/kurly-kls-fulfillment-openapi.yml#cancelReceivingRequest
+  docs: https://developers.kurly.com/docs/api/%EB%AC%BC%EB%A5%98%EB%8C%80%ED%96%89/%EC%9E%85%EA%B3%A0/%EC%9E%85%EA%B3%A0%20%EC%9A%94%EC%B2%AD/%EC%9E%85%EA%B3%A0-%EC%9A%94%EC%B2%AD-%EC%B7%A8%EC%86%8C/
+- name: createDeliveryOrder
+  description: 주문 등록
+  method: POST
+  path: /v1/orders
+  source_operation: openapi/kurly-kls-delivery-agency-openapi.yml#createDeliveryOrder
+  docs: https://developers.kurly.com/docs/api/%EB%B0%B0%EC%86%A1%EB%8C%80%ED%96%89/%EC%A3%BC%EB%AC%B8/%EC%A3%BC%EB%AC%B8%20%EB%93%B1%EB%A1%9D/%EC%A3%BC%EB%AC%B8-%EB%93%B1%EB%A1%9D/
+- name: createOrderV2
+  description: 주문 단건 등록 V2
+  method: POST
+  path: /api/fulfillment/v2/orders
+  source_operation: openapi/kurly-kls-fulfillment-openapi.yml#createOrderV2
+  docs: https://developers.kurly.com/docs/api/%EB%AC%BC%EB%A5%98%EB%8C%80%ED%96%89/%EC%A3%BC%EB%AC%B8/%EC%A3%BC%EB%AC%B8%20%EB%93%B1%EB%A1%9D/%EC%A3%BC%EB%AC%B8-%EB%8B%A8%EA%B1%B4-%EB%93%B1%EB%A1%9D-v-2/
+- name: createOrdersBulkV2
+  description: 주문 다건 등록 V2
+  method: POST
+  path: /api/fulfillment/v2/orders/bulk
+  source_operation: openapi/kurly-kls-fulfillment-openapi.yml#createOrdersBulkV2
+  docs: https://developers.kurly.com/docs/api/%EB%AC%BC%EB%A5%98%EB%8C%80%ED%96%89/%EC%A3%BC%EB%AC%B8/%EC%A3%BC%EB%AC%B8%20%EB%93%B1%EB%A1%9D/%EC%A3%BC%EB%AC%B8-%EB%8B%A4%EA%B1%B4-%EB%93%B1%EB%A1%9D-v-2/
+- name: createReceivingRequest
+  description: 입고 요청 등록
+  method: POST
+  path: /openapi/v1/receiving-request
+  source_operation: openapi/kurly-kls-fulfillment-openapi.yml#createReceivingRequest
+  docs: https://developers.kurly.com/docs/api/%EB%AC%BC%EB%A5%98%EB%8C%80%ED%96%89/%EC%9E%85%EA%B3%A0/%EC%9E%85%EA%B3%A0%20%EC%9A%94%EC%B2%AD/%EC%9E%85%EA%B3%A0-%EC%9A%94%EC%B2%AD-%EB%93%B1%EB%A1%9D/
+- name: downloadReceivingSpecification
+  description: 거래명세서 다운로드
+  method: GET
+  path: /openapi/v1/receiving-request/specification
+  source_operation: openapi/kurly-kls-fulfillment-openapi.yml#downloadReceivingSpecification
+  docs: https://developers.kurly.com/docs/api/%EB%AC%BC%EB%A5%98%EB%8C%80%ED%96%89/%EC%9E%85%EA%B3%A0/%EA%B1%B0%EB%9E%98%EB%AA%85%EC%84%B8%EC%84%9C/%EA%B1%B0%EB%9E%98%EB%AA%85%EC%84%B8%EC%84%9C-%EB%8B%A4%EC%9A%B4%EB%A1%9C%EB%93%9C/
+- name: findDeliveryOrdersByClientOrderCode
+  description: 주문 다건 조회 - 판매처 주문번호
+  method: GET
+  path: /v1/orders
+  source_operation: openapi/kurly-kls-delivery-agency-openapi.yml#findDeliveryOrdersByClientOrderCode
+  docs: https://developers.kurly.com/docs/api/%EB%B0%B0%EC%86%A1%EB%8C%80%ED%96%89/%EC%A3%BC%EB%AC%B8/%EC%A3%BC%EB%AC%B8%20%EC%A1%B0%ED%9A%8C/%EC%A3%BC%EB%AC%B8-%EB%8B%A4%EA%B1%B4-%EC%A1%B0%ED%9A%8C-%ED%8C%90%EB%A7%A4%EC%B2%98-%EC%A3%BC%EB%AC%B8%EB%B2%88%ED%98%B8/
+- name: findDeliveryOrdersByRequestKeys
+  description: 주문 다건 조회 - 요청 식별 키
+  method: GET
+  path: /v1/orders/by-request-keys
+  source_operation: openapi/kurly-kls-delivery-agency-openapi.yml#findDeliveryOrdersByRequestKeys
+  docs: https://developers.kurly.com/docs/api/%EB%B0%B0%EC%86%A1%EB%8C%80%ED%96%89/%EC%A3%BC%EB%AC%B8/%EC%A3%BC%EB%AC%B8%20%EC%A1%B0%ED%9A%8C/%EC%A3%BC%EB%AC%B8-%EB%8B%A4%EA%B1%B4-%EC%A1%B0%ED%9A%8C-%EC%9A%94%EC%B2%AD-%EC%8B%9D%EB%B3%84-%ED%82%A4/
+- name: findDeliveryPolicies
+  description: 배송서비스 목록 조회 API
+  method: POST
+  path: /api/delivery-agency/v1/delivery-policies
+  source_operation: openapi/kurly-kls-delivery-agency-openapi.yml#findDeliveryPolicies
+  docs: https://developers.kurly.com/docs/api/%EB%B0%B0%EC%86%A1%EB%8C%80%ED%96%89/%EB%B0%B0%EC%86%A1%EC%9A%B4%EC%98%81%20%EC%A0%95%EC%B1%85/%EB%B0%B0%EC%86%A1%EC%9A%B4%EC%98%81%20%EC%A0%95%EC%B1%85%20%EC%A1%B0%ED%9A%8C/%EB%B0%B0%EC%86%A1%EC%84%9C%EB%B9%84%EC%8A%A4-%EB%AA%A9%EB%A1%9D-%EC%A1%B0%ED%9A%8C-api/
+- name: findDeliveryTracking
+  description: 배송 추적 조회
+  method: GET
+  path: /v1/couriers/{courier}/trackings/{invoiceNumber}
+  source_operation: openapi/kurly-kls-delivery-tracking-openapi.yml#findDeliveryTracking
+  docs: https://developers.kurly.com/docs/api/%EB%B0%B0%EC%86%A1%EC%B6%94%EC%A0%81/%EB%B0%B0%EC%86%A1-%EC%B6%94%EC%A0%81-%EC%A1%B0%ED%9A%8C/
+- name: findInventories
+  description: 재고 조회
+  method: GET
+  path: /v1/inventories
+  source_operation: openapi/kurly-kls-fulfillment-openapi.yml#findInventories
+  docs: https://developers.kurly.com/docs/api/%EB%AC%BC%EB%A5%98%EB%8C%80%ED%96%89/%EC%9E%AC%EA%B3%A0/%EC%9E%AC%EA%B3%A0%20%EC%A1%B0%ED%9A%8C/%EC%9E%AC%EA%B3%A0-%EC%A1%B0%ED%9A%8C/
+- name: findInvoicePrintData
+  description: 운송장 출력 정보 다건 조회
+  method: POST
+  path: /v1/invoices/print-data
+  source_operation: openapi/kurly-kls-delivery-agency-openapi.yml#findInvoicePrintData
+  docs: https://developers.kurly.com/docs/api/%EB%B0%B0%EC%86%A1%EB%8C%80%ED%96%89/%EC%9A%B4%EC%86%A1%EC%9E%A5/%EC%9A%B4%EC%86%A1%EC%9E%A5%20%EC%B6%9C%EB%A0%A5%20%EC%A0%95%EB%B3%B4%20%EC%A1%B0%ED%9A%8C/%EC%9A%B4%EC%86%A1%EC%9E%A5-%EC%B6%9C%EB%A0%A5-%EC%A0%95%EB%B3%B4-%EB%8B%A4%EA%B1%B4-%EC%A1%B0%ED%9A%8C/
+- name: findLedgers
+  description: 상품별 수불부 조회
+  method: GET
+  path: /v1/ledgers
+  source_operation: openapi/kurly-kls-fulfillment-openapi.yml#findLedgers
+  docs: https://developers.kurly.com/docs/api/%EB%AC%BC%EB%A5%98%EB%8C%80%ED%96%89/%EC%9E%AC%EA%B3%A0/%EC%88%98%EB%B6%88%EB%B6%80/%EC%83%81%ED%92%88%EB%B3%84-%EC%88%98%EB%B6%88%EB%B6%80-%EC%A1%B0%ED%9A%8C/
+- name: findLotLedgers
+  description: 로트별 수불부 조회
+  method: GET
+  path: /v1/lot-ledgers
+  source_operation: openapi/kurly-kls-fulfillment-openapi.yml#findLotLedgers
+  docs: https://developers.kurly.com/docs/api/%EB%AC%BC%EB%A5%98%EB%8C%80%ED%96%89/%EC%9E%AC%EA%B3%A0/%EC%88%98%EB%B6%88%EB%B6%80/%EB%A1%9C%ED%8A%B8%EB%B3%84-%EC%88%98%EB%B6%88%EB%B6%80-%EC%A1%B0%ED%9A%8C/
+- name: findOperationPlan
+  description: 주문이행계획 단건 조회
+  method: POST
+  path: /api/fulfillment/v1/operation-plans
+  source_operation: openapi/kurly-kls-fulfillment-openapi.yml#findOperationPlan
+  docs: https://developers.kurly.com/docs/api/%EB%AC%BC%EB%A5%98%EB%8C%80%ED%96%89/%EC%A3%BC%EB%AC%B8/%EC%A3%BC%EB%AC%B8%EC%9D%B4%ED%96%89%EA%B3%84%ED%9A%8D/%EC%A3%BC%EB%AC%B8%EC%9D%B4%ED%96%89%EA%B3%84%ED%9A%8D-%EB%8B%A8%EA%B1%B4-%EC%A1%B0%ED%9A%8C/
+- name: findOperationPlansBulk
+  description: 주문이행계획 다건 조회
+  method: POST
+  path: /api/fulfillment/v1/operation-plans/bulk
+  source_operation: openapi/kurly-kls-fulfillment-openapi.yml#findOperationPlansBulk
+  docs: https://developers.kurly.com/docs/api/%EB%AC%BC%EB%A5%98%EB%8C%80%ED%96%89/%EC%A3%BC%EB%AC%B8/%EC%A3%BC%EB%AC%B8%EC%9D%B4%ED%96%89%EA%B3%84%ED%9A%8D/%EC%A3%BC%EB%AC%B8%EC%9D%B4%ED%96%89%EA%B3%84%ED%9A%8D-%EB%8B%A4%EA%B1%B4-%EC%A1%B0%ED%9A%8C/
+- name: findOrders
+  description: 주문 조회
+  method: GET
+  path: /api/fulfillment/v1/orders
+  source_operation: openapi/kurly-kls-fulfillment-openapi.yml#findOrders
+  docs: https://developers.kurly.com/docs/api/%EB%AC%BC%EB%A5%98%EB%8C%80%ED%96%89/%EC%A3%BC%EB%AC%B8/%EC%A3%BC%EB%AC%B8%20%EC%A1%B0%ED%9A%8C/%EC%A3%BC%EB%AC%B8-%EC%A1%B0%ED%9A%8C/
+- name: findSalesChannelMappingList
+  description: 판매 채널 상품 매핑 리스트 조회
+  method: GET
+  path: /v1/goods/sales-channel-mapping
+  source_operation: openapi/kurly-kls-fulfillment-openapi.yml#findSalesChannelMappingList
+  docs: https://developers.kurly.com/docs/api/%EB%AC%BC%EB%A5%98%EB%8C%80%ED%96%89/%EC%83%81%ED%92%88/%ED%8C%90%EB%A7%A4%20%EC%B1%84%EB%84%90%20%EC%83%81%ED%92%88%20%EB%A7%A4%ED%95%91/find-sales-channel-mapping-list/
+- name: findSkuList
+  description: 상품 목록 조회
+  method: GET
+  path: /v1/goods/skus
+  source_operation: openapi/kurly-kls-fulfillment-openapi.yml#findSkuList
+  docs: https://developers.kurly.com/docs/api/%EB%AC%BC%EB%A5%98%EB%8C%80%ED%96%89/%EC%83%81%ED%92%88/%EC%83%81%ED%92%88%20%EC%A1%B0%ED%9A%8C/find-sku-list/
+- name: issueToken
+  description: 토큰 발급
+  method: POST
+  path: /auth/token
+  source_operation: openapi/kurly-kls-auth-openapi.yml#issueToken
+  docs: https://developers.kurly.com/docs/api/%EC%9D%B8%EC%A6%9D/%ED%86%A0%ED%81%B0-%EB%B0%9C%EA%B8%89/
+- name: printReceivingLabel
+  description: 입하라벨지 다운로드
+  method: GET
+  path: /openapi/v1/receiving-request/receiving-label/print
+  source_operation: openapi/kurly-kls-fulfillment-openapi.yml#printReceivingLabel
+  docs: https://developers.kurly.com/docs/api/%EB%AC%BC%EB%A5%98%EB%8C%80%ED%96%89/%EC%9E%85%EA%B3%A0/%EC%9E%85%ED%95%98%EB%9D%BC%EB%B2%A8%EC%A7%80/%EC%9E%85%ED%95%98%EB%9D%BC%EB%B2%A8%EC%A7%80-%EB%8B%A4%EC%9A%B4%EB%A1%9C%EB%93%9C/
+- name: saveSalesChannelMapping
+  description: 판매 채널 상품 매핑 등록
+  method: POST
+  path: /v1/goods/sales-channel-mapping
+  source_operation: openapi/kurly-kls-fulfillment-openapi.yml#saveSalesChannelMapping
+  docs: https://developers.kurly.com/docs/api/%EB%AC%BC%EB%A5%98%EB%8C%80%ED%96%89/%EC%83%81%ED%92%88/%ED%8C%90%EB%A7%A4%20%EC%B1%84%EB%84%90%20%EC%83%81%ED%92%88%20%EB%A7%A4%ED%95%91/save-sales-channel-mapping/
+- name: saveSku
+  description: 상품 등록
+  method: POST
+  path: /v1/goods/skus
+  source_operation: openapi/kurly-kls-fulfillment-openapi.yml#saveSku
+  docs: https://developers.kurly.com/docs/api/%EB%AC%BC%EB%A5%98%EB%8C%80%ED%96%89/%EC%83%81%ED%92%88/%EC%83%81%ED%92%88%20%EB%93%B1%EB%A1%9D/save-sku/
+- name: searchReceivingItemStatus
+  description: 상품 입고 현황 조회
+  method: POST
+  path: /openapi/v1/receiving-request/items/status/search
+  source_operation: openapi/kurly-kls-fulfillment-openapi.yml#searchReceivingItemStatus
+  docs: https://developers.kurly.com/docs/api/%EB%AC%BC%EB%A5%98%EB%8C%80%ED%96%89/%EC%9E%85%EA%B3%A0/%EC%9E%85%EA%B3%A0%20%ED%98%84%ED%99%A9/%EC%83%81%ED%92%88-%EC%9E%85%EA%B3%A0-%ED%98%84%ED%99%A9-%EC%A1%B0%ED%9A%8C/
+- name: searchReceivingPlans
+  description: 입고 플랜 조회
+  method: POST
+  path: /openapi/v1/receiving-request/plans/search
+  source_operation: openapi/kurly-kls-fulfillment-openapi.yml#searchReceivingPlans
+  docs: https://developers.kurly.com/docs/api/%EB%AC%BC%EB%A5%98%EB%8C%80%ED%96%89/%EC%9E%85%EA%B3%A0/%EC%9E%85%EA%B3%A0%20%EC%9A%94%EC%B2%AD/%EC%9E%85%EA%B3%A0-%ED%94%8C%EB%9E%9C-%EC%A1%B0%ED%9A%8C/
+- name: searchReceivingReports
+  description: 리포트 조회
+  method: POST
+  path: /openapi/v1/receiving-request/reports/search
+  source_operation: openapi/kurly-kls-fulfillment-openapi.yml#searchReceivingReports
+  docs: https://developers.kurly.com/docs/api/%EB%AC%BC%EB%A5%98%EB%8C%80%ED%96%89/%EC%9E%85%EA%B3%A0/%EC%9E%85%EA%B3%A0%20%ED%98%84%ED%99%A9/%EB%A6%AC%ED%8F%AC%ED%8A%B8-%EC%A1%B0%ED%9A%8C/
+- name: searchReceivingRequests
+  description: 입고 요청 목록 조회
+  method: POST
+  path: /openapi/v1/receiving-request/search
+  source_operation: openapi/kurly-kls-fulfillment-openapi.yml#searchReceivingRequests
+  docs: https://developers.kurly.com/docs/api/%EB%AC%BC%EB%A5%98%EB%8C%80%ED%96%89/%EC%9E%85%EA%B3%A0/%EC%9E%85%EA%B3%A0%20%ED%98%84%ED%99%A9/%EC%9E%85%EA%B3%A0-%EC%9A%94%EC%B2%AD-%EB%AA%A9%EB%A1%9D-%EC%A1%B0%ED%9A%8C/
+- name: updateSalesChannelMapping
+  description: 판매 채널 상품 매핑 수정
+  method: PUT
+  path: /v1/goods/sales-channel-mapping
+  source_operation: openapi/kurly-kls-fulfillment-openapi.yml#updateSalesChannelMapping
+  docs: https://developers.kurly.com/docs/api/%EB%AC%BC%EB%A5%98%EB%8C%80%ED%96%89/%EC%83%81%ED%92%88/%ED%8C%90%EB%A7%A4%20%EC%B1%84%EB%84%90%20%EC%83%81%ED%92%88%20%EB%A7%A4%ED%95%91/update-sales-channel-mapping/
+- name: updateSku
+  description: 상품 수정
+  method: PUT
+  path: /v1/goods/skus
+  source_operation: openapi/kurly-kls-fulfillment-openapi.yml#updateSku
+  docs: https://developers.kurly.com/docs/api/%EB%AC%BC%EB%A5%98%EB%8C%80%ED%96%89/%EC%83%81%ED%92%88/%EC%83%81%ED%92%88%20%EC%88%98%EC%A0%95/update-sku/

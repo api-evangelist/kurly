@@ -1,0 +1,125 @@
+arazzo: 1.0.1
+info:
+  title: Kurly delivery-agency order through to delivery tracking
+  version: 1.0.0
+  description: >-
+    Authenticate against KLS, confirm the shipper's contracted delivery services, register a
+    delivery-agency order with a caller-supplied requestKey, read the order back by that key, pull
+    the waybill print data, and track the resulting shipment. Grounded in the operations captured in
+    openapi/, reconstructed from https://developers.kurly.com.
+sourceDescriptions:
+- name: auth
+  url: ../openapi/kurly-kls-auth-openapi.yml
+  type: openapi
+- name: deliveryAgency
+  url: ../openapi/kurly-kls-delivery-agency-openapi.yml
+  type: openapi
+- name: tracking
+  url: ../openapi/kurly-kls-delivery-tracking-openapi.yml
+  type: openapi
+workflows:
+- workflowId: registerDeliveryOrderAndTrack
+  summary: Register a delivery-agency order idempotently and follow it to delivery.
+  description: >-
+    requestKey is supplied by the caller so that a retry of step registerOrder cannot double-register
+    the shipment. Kurly does not push events, so tracking is polled.
+  inputs:
+    type: object
+    required: [clientId, secretKey, requestKey]
+    properties:
+      clientId:
+        type: string
+        description: Issued by Kurly after IP allowlist registration.
+      secretKey:
+        type: string
+        description: Issued by Kurly after IP allowlist registration.
+      requestKey:
+        type: string
+        maxLength: 50
+        description: >-
+          Caller-generated idempotency and identity key, unique per shipper and never reusable.
+      clientOrderCode:
+        type: string
+        description: Optional sales-channel order number; may be duplicated, not an identifier.
+      courier:
+        type: string
+        description: Carrier code, e.g. Kurly Nextmile.
+  steps:
+  - stepId: issueAccessToken
+    description: Exchange clientId and secretKey for a Bearer access token.
+    operationId: issueToken
+    requestBody:
+      contentType: application/json
+      payload:
+        clientId: $inputs.clientId
+        secretKey: $inputs.secretKey
+    successCriteria:
+    - condition: $statusCode == 200
+    outputs:
+      accessToken: $response.body#/accessToken
+  - stepId: listDeliveryPolicies
+    description: Confirm which delivery services the shipper is contracted for before registering.
+    operationId: findDeliveryPolicies
+    parameters:
+    - name: Authorization
+      in: header
+      value: Bearer $steps.issueAccessToken.outputs.accessToken
+    successCriteria:
+    - condition: $statusCode == 200
+  - stepId: registerOrder
+    description: >-
+      Register the delivery-agency order. Retry this step with the SAME requestKey — never a fresh
+      one. Delivery date must be within D+1.
+    operationId: createDeliveryOrder
+    parameters:
+    - name: Authorization
+      in: header
+      value: Bearer $steps.issueAccessToken.outputs.accessToken
+    requestBody:
+      contentType: application/json
+      payload:
+        requestKey: $inputs.requestKey
+        clientOrderCode: $inputs.clientOrderCode
+    successCriteria:
+    - condition: $statusCode == 200
+  - stepId: confirmOrderByRequestKey
+    description: >-
+      Authoritative check after an ambiguous retry — if the order is present, it registered and must
+      not be sent again. Accepts up to 50 keys.
+    operationId: findDeliveryOrdersByRequestKeys
+    parameters:
+    - name: Authorization
+      in: header
+      value: Bearer $steps.issueAccessToken.outputs.accessToken
+    successCriteria:
+    - condition: $statusCode == 200
+  - stepId: getInvoicePrintData
+    description: Retrieve waybill print data and capture the invoice number used for tracking.
+    operationId: findInvoicePrintData
+    parameters:
+    - name: Authorization
+      in: header
+      value: Bearer $steps.issueAccessToken.outputs.accessToken
+    successCriteria:
+    - condition: $statusCode == 200
+    outputs:
+      invoiceNumber: $response.body#/0/invoiceNumber
+  - stepId: trackShipment
+    description: >-
+      Poll tracking. Stop only on DELIVERY_COMPLETED or DELIVERY_FAILED; intermediate stages may be
+      skipped, so never require the full sequence.
+    operationId: findDeliveryTracking
+    parameters:
+    - name: Authorization
+      in: header
+      value: Bearer $steps.issueAccessToken.outputs.accessToken
+    - name: courier
+      in: path
+      value: $inputs.courier
+    - name: invoiceNumber
+      in: path
+      value: $steps.getInvoicePrintData.outputs.invoiceNumber
+    successCriteria:
+    - condition: $statusCode == 200
+  outputs:
+    invoiceNumber: $steps.getInvoicePrintData.outputs.invoiceNumber

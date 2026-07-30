@@ -1,0 +1,239 @@
+generated: '2026-07-19'
+method: derived
+source: openapi/ + https://developers.kurly.com/docs/api
+api: Kurly Logistics Services (KLS) Open API
+note: >-
+  Entity graph derived from the operation surface and the integration guides. Kurly renders payload
+  schemas client-side, so field-level detail below is limited to identifiers and enums Kurly states
+  explicitly in its guides and changelog. No field names are invented.
+
+domains:
+- key: fulfillment
+  korean: 물류대행
+  description: >-
+    Kurly operates the warehouse for the shipper — goods master, inbound, inventory and outbound
+    orders.
+- key: delivery-agency
+  korean: 배송대행
+  description: >-
+    The shipper ships from their own warehouse and uses Kurly's delivery network (Nextmile) for
+    last-mile.
+- key: delivery-tracking
+  korean: 배송추적
+  description: Shared tracking lookup, usable by both fulfillment and delivery-agency shippers.
+
+entities:
+
+- name: Sku
+  domain: fulfillment
+  korean: 상품
+  description: Goods master record registered by the shipper.
+  operations: [saveSku, updateSku, findSkuList]
+  relationships:
+  - {type: has_many, target: SalesChannelMapping, via: sku}
+  - {type: has_many, target: InventoryRecord, via: sku}
+  - {type: has_many, target: Ledger, via: sku}
+
+- name: SalesChannelMapping
+  domain: fulfillment
+  korean: 판매 채널 상품 매핑
+  description: Maps a shipper sales-channel product identifier onto a Kurly SKU.
+  operations: [saveSalesChannelMapping, updateSalesChannelMapping, findSalesChannelMappingList]
+  relationships:
+  - {type: belongs_to, target: Sku, via: sku}
+
+- name: ReceivingRequest
+  domain: fulfillment
+  korean: 입고 요청
+  description: >-
+    Inbound booking of goods into a Kurly centre. Status flow 요청완료 → 확인완료 → (work statuses);
+    cancellable only while 요청완료.
+  operations:
+  - createReceivingRequest
+  - cancelReceivingRequest
+  - searchReceivingRequests
+  - searchReceivingPlans
+  - searchReceivingItemStatus
+  - printReceivingLabel
+  - downloadReceivingSpecification
+  status_vocabulary: vocabulary/kurly-vocabulary.yml#inbound-request-status
+  relationships:
+  - {type: has_many, target: ReceivingRequestItem, via: receivingRequestCode}
+  - {type: has_many, target: ReceivingReport, via: receivingRequestCode}
+  - {type: has_one, target: ReceivingLabel, via: receivingRequestCode}
+  - {type: has_one, target: TransactionSpecification, via: receivingRequestCode}
+
+- name: ReceivingRequestItem
+  domain: fulfillment
+  korean: 상품별 입고 현황
+  description: Per-SKU line on an inbound booking, with its own work status.
+  operations: [searchReceivingItemStatus]
+  status_vocabulary: vocabulary/kurly-vocabulary.yml#inbound-work-status-item-level
+  relationships:
+  - {type: belongs_to, target: ReceivingRequest, via: receivingRequestCode}
+  - {type: belongs_to, target: Sku, via: sku}
+
+- name: ReceivingReport
+  domain: fulfillment
+  korean: 입고 리포트
+  description: >-
+    Exception raised by a Kurly operator during receiving. One report per issue type; immutable once
+    issued — corrections are made by voiding and re-issuing.
+  operations: [searchReceivingReports]
+  status_vocabulary: vocabulary/kurly-vocabulary.yml#inbound-report-status
+  relationships:
+  - {type: belongs_to, target: ReceivingRequest, via: receivingRequestCode}
+
+- name: ReceivingLabel
+  domain: fulfillment
+  korean: 입하라벨지
+  description: >-
+    PDF inbound label for a receiving request. Downloadable only in 확인대기 / 입고대기 / 입고중
+    states; omitting the SKU code returns labels for every product on the request.
+  operations: [printReceivingLabel]
+  format: application/pdf
+  relationships:
+  - {type: belongs_to, target: ReceivingRequest, via: receivingRequestCode}
+
+- name: TransactionSpecification
+  domain: fulfillment
+  korean: 거래명세서
+  description: Downloadable transaction specification for an inbound request.
+  operations: [downloadReceivingSpecification]
+  relationships:
+  - {type: belongs_to, target: ReceivingRequest, via: receivingRequestCode}
+
+- name: InventoryRecord
+  domain: fulfillment
+  korean: 재고
+  description: Current on-hand stock for a SKU.
+  operations: [findInventories]
+  relationships:
+  - {type: belongs_to, target: Sku, via: sku}
+
+- name: Ledger
+  domain: fulfillment
+  korean: 상품별 수불부
+  description: Per-SKU inbound/outbound movement history over a date range.
+  operations: [findLedgers]
+  relationships:
+  - {type: belongs_to, target: Sku, via: sku}
+
+- name: LotLedger
+  domain: fulfillment
+  korean: 로트별 수불부
+  description: Per-lot inbound/outbound movement history over a date range.
+  operations: [findLotLedgers]
+  relationships:
+  - {type: belongs_to, target: Sku, via: sku}
+  - {type: belongs_to, target: Lot, via: lotNumber}
+
+- name: Lot
+  domain: fulfillment
+  korean: 로트
+  description: >-
+    Lot grouping of stock. Lot number is a validated field on inbound registration, alongside
+    expiry and manufacturing dates.
+  relationships:
+  - {type: belongs_to, target: Sku, via: sku}
+
+- name: FulfillmentOrder
+  domain: fulfillment
+  korean: 주문 (출고)
+  description: >-
+    Outbound order instructing Kurly to pick, pack and ship from its centre. V2 register/cancel
+    accept up to 20 items per bulk call with per-item error detail.
+  operations: [createOrderV2, createOrdersBulkV2, findOrders, cancelOrderV2, cancelOrdersBulkV2]
+  identifiers:
+  - {field: clientOrderCode, description: shipper/sales-channel order number}
+  response_groups: [order, orderer, receiver, outbound, delivery]
+  relationships:
+  - {type: has_many, target: OperationPlan, via: order}
+  - {type: has_many, target: Sku, via: order items}
+
+- name: OperationPlan
+  domain: fulfillment
+  korean: 주문이행계획
+  description: Fulfillment plan for an order — how and when Kurly intends to fulfil it.
+  operations: [findOperationPlan, findOperationPlansBulk]
+  relationships:
+  - {type: belongs_to, target: FulfillmentOrder, via: order}
+
+- name: DeliveryOrder
+  domain: delivery-agency
+  korean: 배송대행 주문
+  description: >-
+    Order handed to Kurly's delivery network from the shipper's own warehouse. Delivery date is
+    constrained to D+1.
+  operations:
+  - createDeliveryOrder
+  - findDeliveryOrdersByRequestKeys
+  - findDeliveryOrdersByClientOrderCode
+  - cancelDeliveryOrderByRequestKey
+  - cancelDeliveryOrderByClientOrderCode
+  identifiers:
+  - field: requestKey
+    role: primary
+    max_length: 50
+    unique: per shipper, never reusable (including for cancelled orders)
+    description: >-
+      Idempotency + identity key. Server-generated when omitted, but shipper-supplied values are
+      recommended so retries cannot double-register.
+  - field: clientOrderCode
+    role: secondary
+    required: false
+    unique: false
+    description: Sales-channel order number; optional and duplicable since docs v1.3.12.
+  enums:
+  - {field: grouping, vocabulary: 'vocabulary/kurly-vocabulary.yml#package-grouping'}
+  - {field: deliveryType, vocabulary: 'vocabulary/kurly-vocabulary.yml#delivery-type'}
+  relationships:
+  - {type: has_many, target: Invoice, via: requestKey}
+  - {type: belongs_to, target: DeliveryPolicy, via: deliveryService}
+
+- name: DeliveryPolicy
+  domain: delivery-agency
+  korean: 배송운영 정책 / 배송서비스
+  description: Available delivery services and their operating policy for the shipper.
+  operations: [findDeliveryPolicies]
+
+- name: Invoice
+  domain: delivery-agency
+  korean: 운송장
+  description: >-
+    Waybill produced for a delivery order. Print data is retrievable in bulk for shippers printing
+    their own waybills.
+  operations: [findInvoicePrintData]
+  identifiers:
+  - {field: invoiceNumber, description: waybill number, used as the tracking key}
+  relationships:
+  - {type: belongs_to, target: DeliveryOrder, via: requestKey}
+  - {type: has_one, target: TrackingRecord, via: invoiceNumber}
+
+- name: TrackingRecord
+  domain: delivery-tracking
+  korean: 배송 추적
+  description: Tracking status and event history for a waybill.
+  operations: [findDeliveryTracking]
+  identifiers:
+  - {field: courier, description: carrier code (path parameter)}
+  - {field: invoiceNumber, description: waybill number (path parameter)}
+  relationships:
+  - {type: belongs_to, target: Invoice, via: invoiceNumber}
+  - {type: has_many, target: TrackingEvent, via: trackingEvents}
+
+- name: TrackingEvent
+  domain: delivery-tracking
+  korean: 배송 상태 이벤트
+  description: >-
+    One status transition on a waybill. Events accumulate in the documented order, though
+    intermediate stages may be skipped.
+  status_vocabulary: vocabulary/kurly-vocabulary.yml#delivery-tracking-status
+  relationships:
+  - {type: belongs_to, target: TrackingRecord, via: invoiceNumber}
+
+- name: AccessToken
+  domain: auth
+  korean: 인증 토큰
+  description: Bearer access token exchanged from clientId + secretKey.
+  operations: [issueToken]

@@ -1,0 +1,114 @@
+arazzo: 1.0.1
+info:
+  title: Kurly fulfillment outbound order flow
+  version: 1.0.0
+  description: >-
+    Map a sales-channel product to a Kurly SKU, verify stock, place a bulk outbound order against
+    Kurly's centre, read the fulfillment plan and reconcile the order. Grounded in the operations
+    captured in openapi/.
+sourceDescriptions:
+- name: auth
+  url: ../openapi/kurly-kls-auth-openapi.yml
+  type: openapi
+- name: fulfillment
+  url: ../openapi/kurly-kls-fulfillment-openapi.yml
+  type: openapi
+workflows:
+- workflowId: placeFulfillmentOrder
+  summary: Map a product, check stock, order fulfillment in bulk, and read the plan back.
+  description: >-
+    Bulk register caps at 20 orders per call and reports failures per item rather than failing the
+    batch, so the response body must be reconciled item by item.
+  inputs:
+    type: object
+    required: [clientId, secretKey]
+    properties:
+      clientId: {type: string}
+      secretKey: {type: string}
+      pageNumber: {type: integer, default: 1}
+      pageSize: {type: integer, default: 50}
+  steps:
+  - stepId: issueAccessToken
+    operationId: issueToken
+    requestBody:
+      contentType: application/json
+      payload:
+        clientId: $inputs.clientId
+        secretKey: $inputs.secretKey
+    successCriteria:
+    - condition: $statusCode == 200
+    outputs:
+      accessToken: $response.body#/accessToken
+  - stepId: mapSalesChannelProduct
+    description: Map the shipper's sales-channel product identifier onto a Kurly SKU.
+    operationId: saveSalesChannelMapping
+    parameters:
+    - name: Authorization
+      in: header
+      value: Bearer $steps.issueAccessToken.outputs.accessToken
+    successCriteria:
+    - condition: $statusCode == 200
+  - stepId: confirmMapping
+    description: Read the mapping back before ordering against it.
+    operationId: findSalesChannelMappingList
+    parameters:
+    - name: Authorization
+      in: header
+      value: Bearer $steps.issueAccessToken.outputs.accessToken
+    successCriteria:
+    - condition: $statusCode == 200
+  - stepId: checkInventory
+    description: Verify on-hand stock before promising it to a customer.
+    operationId: findInventories
+    parameters:
+    - name: Authorization
+      in: header
+      value: Bearer $steps.issueAccessToken.outputs.accessToken
+    successCriteria:
+    - condition: $statusCode == 200
+  - stepId: createOrdersBulk
+    description: >-
+      Register up to 20 outbound orders. Failures come back per item with code and message — retry
+      only the failed entries. V1 order APIs were removed in docs v1.3.6; V2 is the only supported path.
+    operationId: createOrdersBulkV2
+    parameters:
+    - name: Authorization
+      in: header
+      value: Bearer $steps.issueAccessToken.outputs.accessToken
+    successCriteria:
+    - condition: $statusCode == 200
+  - stepId: readOperationPlans
+    description: Read how and when Kurly intends to fulfil the orders. A POST despite being a read.
+    operationId: findOperationPlansBulk
+    parameters:
+    - name: Authorization
+      in: header
+      value: Bearer $steps.issueAccessToken.outputs.accessToken
+    successCriteria:
+    - condition: $statusCode == 200
+  - stepId: reconcileOrders
+    description: >-
+      Page through registered orders. Query-parameter style since docs v1.3.0; the response is grouped
+      into order, orderer, receiver, outbound and delivery.
+    operationId: findOrders
+    parameters:
+    - name: Authorization
+      in: header
+      value: Bearer $steps.issueAccessToken.outputs.accessToken
+    - name: pageNumber
+      in: query
+      value: $inputs.pageNumber
+    - name: pageSize
+      in: query
+      value: $inputs.pageSize
+    successCriteria:
+    - condition: $statusCode == 200
+  - stepId: reviewLedger
+    description: Review per-SKU inbound/outbound movement history over a date range.
+    operationId: findLedgers
+    parameters:
+    - name: Authorization
+      in: header
+      value: Bearer $steps.issueAccessToken.outputs.accessToken
+    successCriteria:
+    - condition: $statusCode == 200

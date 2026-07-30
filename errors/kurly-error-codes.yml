@@ -1,0 +1,88 @@
+generated: '2026-07-19'
+method: searched
+source: https://developers.kurly.com/changelog/1.3.8
+docs:
+- https://developers.kurly.com/changelog/1.3.8
+- https://developers.kurly.com/changelog/1.3.5
+api: Kurly Logistics Services (KLS) Open API
+format: custom
+note: >-
+  KLS does not use RFC 9457 problem+json. Errors are returned in a `{ code, message }` envelope.
+  Kurly publishes the error-code *scheme* and per-domain prefixing in its changelog, but does not
+  publish a complete public error-code registry — the per-operation error lists render client-side on
+  developers.kurly.com. Only codes Kurly states explicitly are recorded below; the catalog is
+  deliberately partial rather than invented.
+
+envelope:
+  fields:
+  - name: code
+    type: string
+    description: KLS error code, domain-prefixed for some domains
+  - name: message
+    type: string
+    description: Human-readable error message (Korean)
+
+domain_prefixes:
+- prefix: DA
+  domain: delivery-agency (배송대행)
+  introduced: '1.3.8'
+  date: '2026-05-21'
+  breaking: true
+  migration: >-
+    All delivery-agency error codes gained a DA prefix. Clients that branch on the previous bare
+    numeric codes must update their code mapping.
+  applies_to:
+  - POST /v1/orders
+  - GET /v1/orders
+  - POST /v1/orders/cancel
+
+error_codes:
+- code: DA60400
+  previous_code: '60400'
+  domain: delivery-agency
+  http_status: 400
+  meaning: Bad request / validation failure on a delivery-agency operation
+  source: https://developers.kurly.com/changelog/1.3.8
+- code: DA60404
+  previous_code: '60404'
+  domain: delivery-agency
+  http_status: 404
+  meaning: Requested delivery-agency resource not found
+  source: https://developers.kurly.com/changelog/1.3.8
+- code: DA60500
+  previous_code: '60500'
+  domain: delivery-agency
+  http_status: 500
+  meaning: Internal error on a delivery-agency operation
+  source: https://developers.kurly.com/changelog/1.3.8
+
+error_classes:
+- domain: fulfillment / inbound (입고)
+  introduced: '1.3.5'
+  date: '2026-04-14'
+  description: >-
+    Inbound receiving-request errors were broken out so the failing field is identifiable.
+  categories:
+  - field validation — expiry date / manufacturing date, quantity, remarks, lot number
+  - product errors — SKU not belonging to the supplier, non-existent SKU
+  - cancellation errors — missing or over-length cancel reason, already-cancelled request,
+      request outside the cancellable time window
+  source: https://developers.kurly.com/changelog/1.3.5
+
+cross_cutting:
+- http_status: 429
+  meaning: Rate limit exceeded
+  scope: all KLS APIs
+  introduced: '1.3.5'
+  source: https://developers.kurly.com/changelog/1.3.5
+- http_status: 400
+  meaning: Authentication error on token issuance
+  scope: POST /auth/token
+  source: https://developers.kurly.com/docs/api/인증/토큰-발급
+
+partial_failure:
+  note: >-
+    Bulk order register/cancel V2 (max 20 items) return per-item error detail (code + message) for
+    failed entries rather than failing the whole batch. SKU registration returns 200 OK on partial
+    success with a per-item result list. Inbound bulk cancellation is all-or-nothing.
+  source: https://developers.kurly.com/changelog/1.3.4
