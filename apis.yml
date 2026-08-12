@@ -129,6 +129,8 @@ maintainers:
   email: info@apis.io
 
 common:
+- type: Overlay
+  url: overlays/kurly-auth-overlay.yaml
 # --- identity and developer surface ---
 - type: Website
   url: https://kurly.com
