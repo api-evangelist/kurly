@@ -2,9 +2,10 @@ generated: '2026-07-19'
 method: derived
 status: candidate
 source: openapi/
-note: Kurly publishes no MCP server. This is a candidate tool surface derived one-to-one from the KLS operations
-  captured in openapi/. It is a design starting point, not a Kurly product. Any implementation must carry a shipper's
-  own clientId/secretKey and run from an IP-allowlisted host, since KLS gates access by source IP.
+note: Kurly publishes no MCP server. This is a candidate tool surface derived one-to-one from the KLS
+  operations captured in openapi/. It is a design starting point, not a Kurly product. Any implementation
+  must carry a shipper's own clientId/secretKey and run from an IP-allowlisted host, since KLS gates access
+  by source IP.
 server:
   name: kurly-kls
   title: Kurly Logistics Services (KLS) Open API
@@ -20,8 +21,8 @@ server:
 operational_notes:
 - 'No webhooks: KLS does not push to external systems, so a server must poll.'
 - Respect the undocumented 429 rate limit; back off on 429.
-- Order registration is idempotent via requestKey (delivery-agency) and X-Idempotency-Key (inbound) — a tool that
-  retries MUST reuse the same key, never generate a new one.
+- Order registration is idempotent via requestKey (delivery-agency) and X-Idempotency-Key (inbound) —
+  a tool that retries MUST reuse the same key, never generate a new one.
 - Bulk order register/cancel cap at 20 items; by-request-keys lookup caps at 50.
 tools:
 - name: cancelDeliveryOrderByClientOrderCode
@@ -222,3 +223,9 @@ tools:
   path: /v1/goods/skus
   source_operation: openapi/kurly-kls-fulfillment-openapi.yml#updateSku
   docs: https://developers.kurly.com/docs/api/%EB%AC%BC%EB%A5%98%EB%8C%80%ED%96%89/%EC%83%81%ED%92%88/%EC%83%81%ED%92%88%20%EC%88%98%EC%A0%95/update-sku/
+deployment:
+  mode: none
+  verified: derived
+  tools: 33
+  checked: '2026-08-12'
+  source: catalog MCP census

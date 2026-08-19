@@ -1,0 +1,170 @@
+{
+  "item": [
+    {
+      "id": "c78ba8b8-f8e4-442f-802d-22467dce867c",
+      "name": "Authentication",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "76733855-6cc9-4d14-a949-cd7c9d53e0bd",
+          "name": "토큰 발급",
+          "request": {
+            "name": "토큰 발급",
+            "description": {
+              "content": "secretKey와 clientId를 통해 인증 토큰을 발급하는 API입니다.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "auth",
+                "token"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "description": "Kurly Logistics Services host referenced in the KLS FAQ.",
+                  "type": "any",
+                  "value": "{{host}}",
+                  "key": "host"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "b7d2f17e-a2b9-44fd-be9c-2bd11a44c7f2",
+              "name": "Success",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "auth",
+                    "token"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "description": "Kurly Logistics Services host referenced in the KLS FAQ.",
+                      "type": "any",
+                      "value": "{{host}}",
+                      "key": "host"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "0856782e-84f6-401e-a8a3-3b24666c4b7c",
+              "name": "Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "auth",
+                    "token"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "description": "Kurly Logistics Services host referenced in the KLS FAQ.",
+                      "type": "any",
+                      "value": "{{host}}",
+                      "key": "host"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"string\",\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "description": {
+        "content": "Kurly Logistics Services host referenced in the KLS FAQ.",
+        "type": "text/plain"
+      },
+      "type": "any",
+      "value": "kls.kurly.com",
+      "key": "host"
+    },
+    {
+      "type": "string",
+      "value": "https://{{host}}",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "9670201d-c166-4254-bf2d-6743a8789828",
+    "name": "Kurly Logistics Services (KLS) Open API Authentication API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Kurly Logistics Services (KLS) Open API lets contracted shipper clients (화주사) integrate their systems with Kurly's fulfillment (물류대행) and delivery-agency (배송대행) services. This document was reconstructed by API Evangelist from Kurly's own published API reference at https://developers.kurly.com — every path, method, summary and response status below is taken from that reference. Request/response schemas are rendered client-side on the provider's site and are NOT reproduced here; treat the referenced page (externalDocs) as authoritative for payloads.\n\nContact Support:\n Email: logistics-dev@kurlycorp.com",
+      "type": "text/plain"
+    }
+  }
+}

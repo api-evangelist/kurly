@@ -1,0 +1,400 @@
+{
+  "item": [
+    {
+      "id": "1d8fa4b7-d3cf-41ef-9233-4bd180c86812",
+      "name": "Delivery Tracking (배송추적)",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "36201a50-78ef-4588-b75d-46133de21abf",
+          "name": "배송 추적 조회",
+          "request": {
+            "name": "배송 추적 조회",
+            "description": {
+              "content": "운송장 번호로 배송 추적 이벤트를 조회합니다. 추적 이벤트가 없는 경우 currentStatus는 null로, trackingEvents는 빈 배열로 반환됩니다. 현재 KURLY(넥스트마일) 택배사만 지원합니다. 3개월 이내의 정보만 조회 가능합니다.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "couriers",
+                ":courier",
+                "trackings",
+                ":invoiceNumber"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "courier",
+                  "description": "(Required) "
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "invoiceNumber",
+                  "description": "(Required) "
+                },
+                {
+                  "description": "Kurly Logistics Services host referenced in the KLS FAQ.",
+                  "type": "any",
+                  "value": "{{host}}",
+                  "key": "host"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET"
+          },
+          "response": [
+            {
+              "id": "2c6c96f3-4ef4-4741-9259-5ae01f3e1064",
+              "name": "Success",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "couriers",
+                    ":courier",
+                    "trackings",
+                    ":invoiceNumber"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "courier",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "invoiceNumber",
+                      "description": "(Required) "
+                    },
+                    {
+                      "description": "Kurly Logistics Services host referenced in the KLS FAQ.",
+                      "type": "any",
+                      "value": "{{host}}",
+                      "key": "host"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "551d2b07-2964-4ee2-ab05-b7a56f8ff237",
+              "name": "Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "couriers",
+                    ":courier",
+                    "trackings",
+                    ":invoiceNumber"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "courier",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "invoiceNumber",
+                      "description": "(Required) "
+                    },
+                    {
+                      "description": "Kurly Logistics Services host referenced in the KLS FAQ.",
+                      "type": "any",
+                      "value": "{{host}}",
+                      "key": "host"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"string\",\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "36959d06-093f-4fbb-b97d-49dceac48fc4",
+              "name": "Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "couriers",
+                    ":courier",
+                    "trackings",
+                    ":invoiceNumber"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "courier",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "invoiceNumber",
+                      "description": "(Required) "
+                    },
+                    {
+                      "description": "Kurly Logistics Services host referenced in the KLS FAQ.",
+                      "type": "any",
+                      "value": "{{host}}",
+                      "key": "host"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"string\",\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "348549d6-a0b7-412a-9ba8-cf83ea58c96e",
+              "name": "Rate limit exceeded (added to all APIs in KLS docs v1.3.5)",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "couriers",
+                    ":courier",
+                    "trackings",
+                    ":invoiceNumber"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "courier",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "invoiceNumber",
+                      "description": "(Required) "
+                    },
+                    {
+                      "description": "Kurly Logistics Services host referenced in the KLS FAQ.",
+                      "type": "any",
+                      "value": "{{host}}",
+                      "key": "host"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"string\",\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "3d18b476-d0d1-4e41-a07b-6b886ff4761e",
+              "name": "Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "couriers",
+                    ":courier",
+                    "trackings",
+                    ":invoiceNumber"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "courier",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "invoiceNumber",
+                      "description": "(Required) "
+                    },
+                    {
+                      "description": "Kurly Logistics Services host referenced in the KLS FAQ.",
+                      "type": "any",
+                      "value": "{{host}}",
+                      "key": "host"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"string\",\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "description": {
+        "content": "Kurly Logistics Services host referenced in the KLS FAQ.",
+        "type": "text/plain"
+      },
+      "type": "any",
+      "value": "kls.kurly.com",
+      "key": "host"
+    },
+    {
+      "type": "string",
+      "value": "https://{{host}}",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "8492332a-5f9f-4dac-8102-edaafa9d63bc",
+    "name": "Kurly Logistics Services (KLS) Open API Authentication Delivery Tracking (배송추적) API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Kurly Logistics Services (KLS) Open API lets contracted shipper clients (화주사) integrate their systems with Kurly's fulfillment (물류대행) and delivery-agency (배송대행) services. This document was reconstructed by API Evangelist from Kurly's own published API reference at https://developers.kurly.com — every path, method, summary and response status below is taken from that reference. Request/response schemas are rendered client-side on the provider's site and are NOT reproduced here; treat the referenced page (externalDocs) as authoritative for payloads.\n\nContact Support:\n Email: logistics-dev@kurlycorp.com",
+      "type": "text/plain"
+    }
+  }
+}
