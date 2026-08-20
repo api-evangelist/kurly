@@ -41,6 +41,20 @@ tags:
 - Fulfillment
 - Supply Chain
 - Delivery
+- E-Commerce
+- Grocery
+- Shipping
+- Order Management
+- Inventory
+- Tracking
+- South Korea
+tags_raw:
+- Company
+- Technology
+- Logistics
+- Fulfillment
+- Supply Chain
+- Delivery
 - Ecommerce
 - Grocery
 - Shipping
@@ -78,7 +92,8 @@ apis:
   description: The 배송운영 정책 API from Kurly — 26 operation(s) for 배송운영 정책.
   humanURL: https://developers.kurly.com/docs/api/물류대행
   baseURL: https://kls.kurly.com
-  tags:
+  tags: []
+  tags_raw:
   - 배송운영 정책
   properties:
   - type: OpenAPI
@@ -104,6 +119,8 @@ apis:
   humanURL: https://developers.kurly.com/docs/api/물류대행
   baseURL: https://kls.kurly.com
   tags:
+  - Delivery Tracking
+  tags_raw:
   - Delivery Tracking (배송추적)
   properties:
   - type: OpenAPI
