@@ -7,6 +7,17 @@ info:
     delivery-agency order with a caller-supplied requestKey, read the order back by that key, pull
     the waybill print data, and track the resulting shipment. Grounded in the operations captured in
     openapi/, reconstructed from https://developers.kurly.com.
+  x-realizes-capability-ids:
+  - BC-2510.20
+  x-capability-derivation:
+    method: 'deterministic join: sourceDescriptions -> per-tag OpenAPI -> tag/capability edge. No classification at this step.'
+    min_confidence: 0.7
+    sources:
+    - capability_id: BC-2510.20
+      capability_name: Shipment Tracking Management
+      spec: kurly-delivery-tracking-api-openapi.yml
+      confidence: 0.9
+    model: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities, CC BY 4.0
 sourceDescriptions:
 - name: authenticationApi
   url: ../openapi/kurly-authentication-api-openapi.yml
