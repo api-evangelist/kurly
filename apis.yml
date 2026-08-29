@@ -158,6 +158,9 @@ maintainers:
   email: info@apis.io
 
 common:
+- type: CapabilityMap
+  url: capabilities/kurly-capability-edges.yml
+  name: Kurly Business Capability Map
 - type: Overlay
   url: overlays/kurly-auth-overlay.yaml
 # --- identity and developer surface ---
