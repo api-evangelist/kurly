@@ -12,6 +12,18 @@ description: >-
   registration — and Kurly states as policy that KLS does not push data to external systems, so
   integrations poll rather than subscribe to webhooks.
 url: https://raw.githubusercontent.com/api-evangelist/kurly/refs/heads/main/apis.yml
+deliveryModel:
+  model: saas
+  open_source: false
+  commercial: true
+  callable_host: false
+  label: Hosted service · you call their endpoint
+  confidence: medium
+  source:
+  - openapi
+  - pricing
+  generated: '2026-08-28'
+  method: derived
 accessModel:
   pricing: unknown
   onboarding: self-serve
