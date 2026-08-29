@@ -7,11 +7,11 @@ info:
     Kurly's centre, read the fulfillment plan and reconcile the order. Grounded in the operations
     captured in openapi/.
 sourceDescriptions:
-- name: auth
-  url: ../openapi/kurly-kls-auth-openapi.yml
+- name: authenticationApi
+  url: ../openapi/kurly-authentication-api-openapi.yml
   type: openapi
-- name: fulfillment
-  url: ../openapi/kurly-kls-fulfillment-openapi.yml
+- name: defaultApi
+  url: ../openapi/kurly-default-api-openapi.yml
   type: openapi
 workflows:
 - workflowId: placeFulfillmentOrder

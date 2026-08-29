@@ -7,11 +7,11 @@ info:
     inbound label and transaction specification, then poll request-level status, item-level status
     and exception reports. Grounded in the operations captured in openapi/.
 sourceDescriptions:
-- name: auth
-  url: ../openapi/kurly-kls-auth-openapi.yml
+- name: authenticationApi
+  url: ../openapi/kurly-authentication-api-openapi.yml
   type: openapi
-- name: fulfillment
-  url: ../openapi/kurly-kls-fulfillment-openapi.yml
+- name: defaultApi
+  url: ../openapi/kurly-default-api-openapi.yml
   type: openapi
 workflows:
 - workflowId: bookAndMonitorInbound

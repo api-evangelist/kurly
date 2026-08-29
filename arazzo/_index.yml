@@ -1,8 +1,8 @@
-generated: '2026-07-19'
-method: derived
-source: arazzo/*.yml
-api: Kurly Logistics Services (KLS) Open API
-note: >-
+x-generated: '2026-07-19'
+x-method: derived
+x-source: arazzo/*.yml
+x-api: Kurly Logistics Services (KLS) Open API
+x-note: >-
   Native Arazzo workflows stitching KLS operations into the provider's real multi-step use cases.
   Every operationId is verified against the specs in openapi/.
 

@@ -8,14 +8,14 @@ info:
     the waybill print data, and track the resulting shipment. Grounded in the operations captured in
     openapi/, reconstructed from https://developers.kurly.com.
 sourceDescriptions:
-- name: auth
-  url: ../openapi/kurly-kls-auth-openapi.yml
+- name: authenticationApi
+  url: ../openapi/kurly-authentication-api-openapi.yml
   type: openapi
-- name: deliveryAgency
-  url: ../openapi/kurly-kls-delivery-agency-openapi.yml
+- name: defaultApi
+  url: ../openapi/kurly-default-api-openapi.yml
   type: openapi
-- name: tracking
-  url: ../openapi/kurly-kls-delivery-tracking-openapi.yml
+- name: deliveryTrackingApi
+  url: ../openapi/kurly-delivery-tracking-api-openapi.yml
   type: openapi
 workflows:
 - workflowId: registerDeliveryOrderAndTrack
