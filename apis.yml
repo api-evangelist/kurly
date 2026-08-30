@@ -131,7 +131,7 @@ apis:
   humanURL: https://developers.kurly.com/docs/api/물류대행
   baseURL: https://kls.kurly.com
   tags:
-  - Delivery Tracking
+  - Delivery Tracking (배송추적)
   tags_raw:
   - Delivery Tracking (배송추적)
   properties:
