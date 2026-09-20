@@ -1,31 +1,29 @@
-# Kin Score artifact — kurly — 2026-08-19T082702
+# Kin Score artifact — kurly — 2026-09-19T165737
 # The API Evangelist rating (https://github.com/api-evangelist/kin-score). Generated; do not edit.
 ---
 kin_score:
   slug: kurly
-  schema_version: 0.12.0
-  scored_at: '2026-08-19'
-  run_ts: 2026-08-19T082702
-  composite: 37.3
+  schema_version: 0.22.0
+  scored_at: '2026-09-19'
+  run_ts: 2026-09-19T165737
+  composite: 34.2
   band: thin
   facets:
-    discoverability: 92.6
-    contract_quality: 51.7
-    governance: 31.8
+    discoverability: 81.5
+    contract_quality: 52.2
+    contract_governance: 19.7
     operational_transparency: 18.4
     developer_ergonomics: 31.5
-    commercial_clarity: 13.2
-    contract_governance: 31.8
     access_clarity: 13.2
   agent_readiness:
-    score: 46.3
-    band: agent-native
+    score: 34.3
+    band: agent-ready
     dimensions:
       spec_presence: true
       agentic_access: derived
       reversibility_documented: documented
       mcp_server: false
-      auth_clarity: true
+      auth_clarity: bearer
       idempotency: documented
       error_semantics: verified
       openapi_examples: false
@@ -36,6 +34,10 @@ kin_score:
       consent_identity: false
       agent_card: false
       dry_run_mode: false
+      delegated_identity: false
+      protected_resource_metadata: false
+      dynamic_client_registration: false
+      agentic_commerce: false
   provenance:
     mcp: derived
     skills: derived
