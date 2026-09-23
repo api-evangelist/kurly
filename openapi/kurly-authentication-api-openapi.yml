@@ -1,8 +1,8 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Kurly Logistics Services (KLS) Open API Authentication API
+  title: Kurly Logistics Services (KLS) Open Authentication API
   version: 1.3.12
-  description: Kurly Logistics Services (KLS) Open API lets contracted shipper clients (화주사) integrate their systems with Kurly's fulfillment (물류대행) and delivery-agency (배송대행) services. This document was reconstructed by API Evangelist from Kurly's own published API reference at https://developers.kurly.com — every path, method, summary and response status below is taken from that reference. Request/response schemas are rendered client-side on the provider's site and are NOT reproduced here; treat the referenced page (externalDocs) as authoritative for payloads.
+  description: Kurly Logistics Services (KLS) Open API lets contracted shipper clients (화주사) integrate their systems with Kurly's fulfillment (물류대행) and delivery-agency (배송대행) services.
   contact:
     email: logistics-dev@kurlycorp.com
     url: https://developers.kurly.com/docs/faq

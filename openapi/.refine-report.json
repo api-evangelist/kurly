@@ -1,9 +1,10 @@
 {
   "provider": "kurly",
   "sources": [
-    "kurly-authentication-api-openapi.yml",
-    "kurly-default-api-openapi.yml",
-    "kurly-delivery-tracking-api-openapi.yml"
+    "_original/kurly-kls-auth-openapi.yml",
+    "_original/kurly-kls-delivery-agency-openapi.yml",
+    "_original/kurly-kls-delivery-tracking-openapi.yml",
+    "_original/kurly-kls-fulfillment-openapi.yml"
   ],
   "outputs": [
     "kurly-authentication-api-openapi.yml",
@@ -13,6 +14,27 @@
   "archived": [],
   "errors": [],
   "warnings": [],
-  "notes": [],
-  "skipped": []
+  "notes": [
+    "sourced from openapi/_original/ (4 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "kurly-kls-auth-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "kurly-kls-auth-openapi.yml: declared missing tag: Authentication",
+    "kurly-kls-delivery-agency-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "kurly-kls-delivery-agency-openapi.yml: declared missing tag: \ubc30\uc1a1\uc6b4\uc601 \uc815\ucc45",
+    "kurly-kls-delivery-agency-openapi.yml: declared missing tag: \uc6b4\uc1a1\uc7a5",
+    "kurly-kls-delivery-agency-openapi.yml: declared missing tag: \uc8fc\ubb38",
+    "kurly-kls-delivery-tracking-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "kurly-kls-delivery-tracking-openapi.yml: declared missing tag: Delivery Tracking (\ubc30\uc1a1\ucd94\uc801)",
+    "kurly-kls-fulfillment-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "kurly-kls-fulfillment-openapi.yml: declared missing tag: \uc0c1\ud488",
+    "kurly-kls-fulfillment-openapi.yml: declared missing tag: \uc785\uace0",
+    "kurly-kls-fulfillment-openapi.yml: declared missing tag: \uc7ac\uace0",
+    "kurly-kls-fulfillment-openapi.yml: declared missing tag: \uc8fc\ubb38",
+    "tag '\ubc30\uc1a1\uc6b4\uc601 \uc815\ucc45' spans 2 source specs (kurly-kls-delivery-agency-openapi.yml, kurly-kls-fulfillment-openapi.yml): per-path servers applied",
+    "apis.yml register: already-registered"
+  ],
+  "skipped": [
+    "kurly-authentication-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "kurly-default-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "kurly-delivery-tracking-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
 }

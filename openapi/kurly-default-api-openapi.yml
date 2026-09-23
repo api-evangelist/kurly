@@ -1,14 +1,14 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Kurly Logistics Services (KLS) Open API Authentication 배송운영 정책 API
+  title: Kurly 배송운영 정책 API
   version: 1.3.12
-  description: Kurly Logistics Services (KLS) Open API lets contracted shipper clients (화주사) integrate their systems with Kurly's fulfillment (물류대행) and delivery-agency (배송대행) services. This document was reconstructed by API Evangelist from Kurly's own published API reference at https://developers.kurly.com — every path, method, summary and response status below is taken from that reference. Request/response schemas are rendered client-side on the provider's site and are NOT reproduced here; treat the referenced page (externalDocs) as authoritative for payloads.
   contact:
     email: logistics-dev@kurlycorp.com
     url: https://developers.kurly.com/docs/faq
-  x-generated-by: api-evangelist enrichment pipeline
   x-generated: '2026-07-19'
+  x-generated-by: api-evangelist enrichment pipeline
   x-source: https://developers.kurly.com/docs/api
+  description: 'Operations tagged 배송운영 정책 across 2 of this provider''s published API definitions: kurly-kls-delivery-agency-openapi.yml, kurly-kls-fulfillment-openapi.yml. Each path carries the servers of the definition it was published in.'
 servers:
 - url: https://{host}
   description: KLS Open API base host. Kurly does not publish the base host publicly; it is issued to contracted shippers together with clientId/secretKey after IP allowlisting.
@@ -16,7 +16,8 @@ servers:
     host:
       default: kls.kurly.com
       description: Kurly Logistics Services host referenced in the KLS FAQ.
-security: []
+security:
+- bearerAuth: []
 tags:
 - name: 배송운영 정책
 paths:
@@ -51,6 +52,13 @@ paths:
       description: 주소만 입력하면 화주사의 배송대행 정책에 매칭되는 가용 운영정책을 가장 빠른 배송 가능일 기준으로 조회합니다. deliveryDate는 입력하지 않습니다. oms-order-operation 이 가장 빠른 배송 예정일을 자동 결정하여 응답합니다. 응답은 화주사의 배송대행 정책(샛별/하루)에 매칭되는 권역·택배사 옵션만 반환합니다. operation의 night 와 관련된 서비스는 현재 준비중입니다. 서비스 이용 가능 시기에 따로 안내가 있을 예정이니 참고 부탁드립니다.
       security:
       - bearerAuth: []
+    servers:
+    - url: https://{host}
+      description: KLS Open API base host. Kurly does not publish the base host publicly; it is issued to contracted shippers together with clientId/secretKey after IP allowlisting.
+      variables:
+        host:
+          default: kls.kurly.com
+          description: Kurly Logistics Services host referenced in the KLS FAQ.
   /v1/invoices/print-data:
     post:
       operationId: findInvoicePrintData
@@ -88,6 +96,13 @@ paths:
       description: 송장 번호 목록으로 송장 출력에 필요한 정보를 조회합니다. 택배사(courier) 값에 따라 invoice 객체의 스키마가 달라집니다. 요청한 화주사 본인의 송장만 반환됩니다. 미존재하거나 다른 화주사 소유인 번호는 응답에서 제외됩니다.
       security:
       - bearerAuth: []
+    servers:
+    - url: https://{host}
+      description: KLS Open API base host. Kurly does not publish the base host publicly; it is issued to contracted shippers together with clientId/secretKey after IP allowlisting.
+      variables:
+        host:
+          default: kls.kurly.com
+          description: Kurly Logistics Services host referenced in the KLS FAQ.
   /v1/orders:
     post:
       operationId: createDeliveryOrder
@@ -161,6 +176,13 @@ paths:
       description: 판매처 주문번호 목록으로 주문 정보를 조회합니다. 요청한 화주사 본인의 주문만 반환됩니다. 미존재하거나 다른 화주사 소유인 주문번호는 응답에서 제외됩니다.
       security:
       - bearerAuth: []
+    servers:
+    - url: https://{host}
+      description: KLS Open API base host. Kurly does not publish the base host publicly; it is issued to contracted shippers together with clientId/secretKey after IP allowlisting.
+      variables:
+        host:
+          default: kls.kurly.com
+          description: Kurly Logistics Services host referenced in the KLS FAQ.
   /v1/orders/by-request-keys:
     get:
       operationId: findDeliveryOrdersByRequestKeys
@@ -198,6 +220,13 @@ paths:
       description: 요청 식별 키 목록으로 주문 정보를 조회합니다. 요청한 화주사 본인의 주문만 반환됩니다. 미존재하거나 다른 화주사 소유인 요청 식별 키는 응답에서 제외됩니다.
       security:
       - bearerAuth: []
+    servers:
+    - url: https://{host}
+      description: KLS Open API base host. Kurly does not publish the base host publicly; it is issued to contracted shippers together with clientId/secretKey after IP allowlisting.
+      variables:
+        host:
+          default: kls.kurly.com
+          description: Kurly Logistics Services host referenced in the KLS FAQ.
   /v1/orders/cancel/by-request-key:
     post:
       operationId: cancelDeliveryOrderByRequestKey
@@ -241,6 +270,13 @@ paths:
       description: 입력한 요청 식별 키에 해당하는 주문을 단건 취소합니다. 취소할 수 없는 상태(출고·배송 진행 등)면 취소되지 않습니다. 이미 취소된 주문은 성공으로 간주(멱등)합니다.
       security:
       - bearerAuth: []
+    servers:
+    - url: https://{host}
+      description: KLS Open API base host. Kurly does not publish the base host publicly; it is issued to contracted shippers together with clientId/secretKey after IP allowlisting.
+      variables:
+        host:
+          default: kls.kurly.com
+          description: Kurly Logistics Services host referenced in the KLS FAQ.
   /v1/orders/cancel:
     post:
       operationId: cancelDeliveryOrderByClientOrderCode
@@ -284,6 +320,13 @@ paths:
       description: 입력한 판매처 주문번호에 해당하는 배송대행 주문을 취소합니다. 동일 판매처 주문번호의 건이 여러 개면 함께 처리되며, 하나라도 취소할 수 없는 주문(출고·배송 진행 등)이 있으면 전체가 취소되지 않습니다. 이미 취소된 주문은 성공으로 간주(멱등)합니다.
       security:
       - bearerAuth: []
+    servers:
+    - url: https://{host}
+      description: KLS Open API base host. Kurly does not publish the base host publicly; it is issued to contracted shippers together with clientId/secretKey after IP allowlisting.
+      variables:
+        host:
+          default: kls.kurly.com
+          description: Kurly Logistics Services host referenced in the KLS FAQ.
   /v1/goods/skus:
     post:
       operationId: saveSku
@@ -357,6 +400,13 @@ paths:
       description: 상품 목록을 조회하는 API입니다.
       security:
       - bearerAuth: []
+    servers:
+    - url: https://{host}
+      description: KLS Open API base host. Kurly does not publish the base host publicly; it is issued to contracted shippers together with clientId/secretKey after IP allowlisting.
+      variables:
+        host:
+          default: kls.kurly.com
+          description: Kurly Logistics Services host referenced in the KLS FAQ.
   /v1/goods/sales-channel-mapping:
     get:
       operationId: findSalesChannelMappingList
@@ -430,6 +480,13 @@ paths:
       description: 판매 채널 상품 매핑을 수정하는 API입니다.
       security:
       - bearerAuth: []
+    servers:
+    - url: https://{host}
+      description: KLS Open API base host. Kurly does not publish the base host publicly; it is issued to contracted shippers together with clientId/secretKey after IP allowlisting.
+      variables:
+        host:
+          default: kls.kurly.com
+          description: Kurly Logistics Services host referenced in the KLS FAQ.
   /openapi/v1/receiving-request/specification:
     get:
       operationId: downloadReceivingSpecification
@@ -467,6 +524,13 @@ paths:
       description: 입고 요청 코드를 기반으로 거래명세서(PDF)를 다운로드합니다.
       security:
       - bearerAuth: []
+    servers:
+    - url: https://{host}
+      description: KLS Open API base host. Kurly does not publish the base host publicly; it is issued to contracted shippers together with clientId/secretKey after IP allowlisting.
+      variables:
+        host:
+          default: kls.kurly.com
+          description: Kurly Logistics Services host referenced in the KLS FAQ.
   /openapi/v1/receiving-request:
     post:
       operationId: createReceivingRequest
@@ -504,6 +568,13 @@ paths:
       description: 입고 요청을 등록하는 API입니다.
       security:
       - bearerAuth: []
+    servers:
+    - url: https://{host}
+      description: KLS Open API base host. Kurly does not publish the base host publicly; it is issued to contracted shippers together with clientId/secretKey after IP allowlisting.
+      variables:
+        host:
+          default: kls.kurly.com
+          description: Kurly Logistics Services host referenced in the KLS FAQ.
   /openapi/v1/receiving-request/cancel:
     patch:
       operationId: cancelReceivingRequest
@@ -541,6 +612,13 @@ paths:
       description: 등록된 입고 요청을 취소하는 API입니다.
       security:
       - bearerAuth: []
+    servers:
+    - url: https://{host}
+      description: KLS Open API base host. Kurly does not publish the base host publicly; it is issued to contracted shippers together with clientId/secretKey after IP allowlisting.
+      variables:
+        host:
+          default: kls.kurly.com
+          description: Kurly Logistics Services host referenced in the KLS FAQ.
   /openapi/v1/receiving-request/plans/search:
     post:
       operationId: searchReceivingPlans
@@ -578,6 +656,13 @@ paths:
       description: 입고 요청할 상품 및 수량 정보를 바탕으로 입고 플랜 목록을 조회하는 API입니다.
       security:
       - bearerAuth: []
+    servers:
+    - url: https://{host}
+      description: KLS Open API base host. Kurly does not publish the base host publicly; it is issued to contracted shippers together with clientId/secretKey after IP allowlisting.
+      variables:
+        host:
+          default: kls.kurly.com
+          description: Kurly Logistics Services host referenced in the KLS FAQ.
   /openapi/v1/receiving-request/reports/search:
     post:
       operationId: searchReceivingReports
@@ -615,6 +700,13 @@ paths:
       description: 입고 리포트 목록을 조회합니다.
       security:
       - bearerAuth: []
+    servers:
+    - url: https://{host}
+      description: KLS Open API base host. Kurly does not publish the base host publicly; it is issued to contracted shippers together with clientId/secretKey after IP allowlisting.
+      variables:
+        host:
+          default: kls.kurly.com
+          description: Kurly Logistics Services host referenced in the KLS FAQ.
   /openapi/v1/receiving-request/items/status/search:
     post:
       operationId: searchReceivingItemStatus
@@ -652,6 +744,13 @@ paths:
       description: 다양한 조건을 통해 상품별 입고 현황을 조회합니다.
       security:
       - bearerAuth: []
+    servers:
+    - url: https://{host}
+      description: KLS Open API base host. Kurly does not publish the base host publicly; it is issued to contracted shippers together with clientId/secretKey after IP allowlisting.
+      variables:
+        host:
+          default: kls.kurly.com
+          description: Kurly Logistics Services host referenced in the KLS FAQ.
   /openapi/v1/receiving-request/search:
     post:
       operationId: searchReceivingRequests
@@ -689,6 +788,13 @@ paths:
       description: 입고 요청 목록을 조회하는 API입니다.
       security:
       - bearerAuth: []
+    servers:
+    - url: https://{host}
+      description: KLS Open API base host. Kurly does not publish the base host publicly; it is issued to contracted shippers together with clientId/secretKey after IP allowlisting.
+      variables:
+        host:
+          default: kls.kurly.com
+          description: Kurly Logistics Services host referenced in the KLS FAQ.
   /openapi/v1/receiving-request/receiving-label/print:
     get:
       operationId: printReceivingLabel
@@ -726,6 +832,13 @@ paths:
       description: 입고 요청 코드를 기반으로 입하라벨지(PDF)를 다운로드합니다. 상품코드를 지정하지 않으면 해당 입고 요청의 전체 상품 라벨을 대상으로 합니다. 다운로드 가능 상태(확인대기/입고대기/입고중)에서만 다운로드할 수 있습니다.
       security:
       - bearerAuth: []
+    servers:
+    - url: https://{host}
+      description: KLS Open API base host. Kurly does not publish the base host publicly; it is issued to contracted shippers together with clientId/secretKey after IP allowlisting.
+      variables:
+        host:
+          default: kls.kurly.com
+          description: Kurly Logistics Services host referenced in the KLS FAQ.
   /v1/lot-ledgers:
     get:
       operationId: findLotLedgers
@@ -763,6 +876,13 @@ paths:
       description: 날짜 범위 내 로트별 수불부를 조회합니다. goodsCode 가 존재하는 경우 최대 조회가능 날짜 31일, 존재하지 않는 경우 최대 7일
       security:
       - bearerAuth: []
+    servers:
+    - url: https://{host}
+      description: KLS Open API base host. Kurly does not publish the base host publicly; it is issued to contracted shippers together with clientId/secretKey after IP allowlisting.
+      variables:
+        host:
+          default: kls.kurly.com
+          description: Kurly Logistics Services host referenced in the KLS FAQ.
   /v1/ledgers:
     get:
       operationId: findLedgers
@@ -800,6 +920,13 @@ paths:
       description: 날짜 범위 내 상품별 수불부를 조회합니다. goodsCode 가 존재하는 경우 최대 조회가능 날짜 31일, 존재하지 않는 경우 최대 7일
       security:
       - bearerAuth: []
+    servers:
+    - url: https://{host}
+      description: KLS Open API base host. Kurly does not publish the base host publicly; it is issued to contracted shippers together with clientId/secretKey after IP allowlisting.
+      variables:
+        host:
+          default: kls.kurly.com
+          description: Kurly Logistics Services host referenced in the KLS FAQ.
   /v1/inventories:
     get:
       operationId: findInventories
@@ -837,6 +964,13 @@ paths:
       description: 재고 조회 API 입니다.
       security:
       - bearerAuth: []
+    servers:
+    - url: https://{host}
+      description: KLS Open API base host. Kurly does not publish the base host publicly; it is issued to contracted shippers together with clientId/secretKey after IP allowlisting.
+      variables:
+        host:
+          default: kls.kurly.com
+          description: Kurly Logistics Services host referenced in the KLS FAQ.
   /api/fulfillment/v2/orders/bulk:
     post:
       operationId: createOrdersBulkV2
@@ -865,9 +999,15 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-      description: 주문 다건 등록 V2
       security:
       - bearerAuth: []
+    servers:
+    - url: https://{host}
+      description: KLS Open API base host. Kurly does not publish the base host publicly; it is issued to contracted shippers together with clientId/secretKey after IP allowlisting.
+      variables:
+        host:
+          default: kls.kurly.com
+          description: Kurly Logistics Services host referenced in the KLS FAQ.
   /api/fulfillment/v2/orders:
     post:
       operationId: createOrderV2
@@ -896,9 +1036,15 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-      description: 주문 단건 등록 V2
       security:
       - bearerAuth: []
+    servers:
+    - url: https://{host}
+      description: KLS Open API base host. Kurly does not publish the base host publicly; it is issued to contracted shippers together with clientId/secretKey after IP allowlisting.
+      variables:
+        host:
+          default: kls.kurly.com
+          description: Kurly Logistics Services host referenced in the KLS FAQ.
   /api/fulfillment/v1/orders:
     get:
       operationId: findOrders
@@ -936,6 +1082,13 @@ paths:
       description: 등록된 주문 정보를 조회하는 API입니다.
       security:
       - bearerAuth: []
+    servers:
+    - url: https://{host}
+      description: KLS Open API base host. Kurly does not publish the base host publicly; it is issued to contracted shippers together with clientId/secretKey after IP allowlisting.
+      variables:
+        host:
+          default: kls.kurly.com
+          description: Kurly Logistics Services host referenced in the KLS FAQ.
   /api/fulfillment/v2/orders/bulk/cancel:
     put:
       operationId: cancelOrdersBulkV2
@@ -964,9 +1117,15 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-      description: 주문 다건 취소 V2
       security:
       - bearerAuth: []
+    servers:
+    - url: https://{host}
+      description: KLS Open API base host. Kurly does not publish the base host publicly; it is issued to contracted shippers together with clientId/secretKey after IP allowlisting.
+      variables:
+        host:
+          default: kls.kurly.com
+          description: Kurly Logistics Services host referenced in the KLS FAQ.
   /api/fulfillment/v2/orders/cancel:
     put:
       operationId: cancelOrderV2
@@ -995,9 +1154,15 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-      description: 주문 단건 취소 V2
       security:
       - bearerAuth: []
+    servers:
+    - url: https://{host}
+      description: KLS Open API base host. Kurly does not publish the base host publicly; it is issued to contracted shippers together with clientId/secretKey after IP allowlisting.
+      variables:
+        host:
+          default: kls.kurly.com
+          description: Kurly Logistics Services host referenced in the KLS FAQ.
   /api/fulfillment/v1/operation-plans/bulk:
     post:
       operationId: findOperationPlansBulk
@@ -1029,6 +1194,13 @@ paths:
       description: 여러 주문이행계획을 한 번에 조회하는 API입니다.
       security:
       - bearerAuth: []
+    servers:
+    - url: https://{host}
+      description: KLS Open API base host. Kurly does not publish the base host publicly; it is issued to contracted shippers together with clientId/secretKey after IP allowlisting.
+      variables:
+        host:
+          default: kls.kurly.com
+          description: Kurly Logistics Services host referenced in the KLS FAQ.
   /api/fulfillment/v1/operation-plans:
     post:
       operationId: findOperationPlan
@@ -1060,6 +1232,13 @@ paths:
       description: 주문이행계획 단건 조회 API입니다.
       security:
       - bearerAuth: []
+    servers:
+    - url: https://{host}
+      description: KLS Open API base host. Kurly does not publish the base host publicly; it is issued to contracted shippers together with clientId/secretKey after IP allowlisting.
+      variables:
+        host:
+          default: kls.kurly.com
+          description: Kurly Logistics Services host referenced in the KLS FAQ.
 components:
   schemas:
     Error:
@@ -1072,6 +1251,14 @@ components:
         message:
           type: string
           description: Human readable error message
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: 'Access token issued by POST /auth/token using the clientId/secretKey pair Kurly issues after IP allowlist registration. Sent as `Authorization: Bearer {AccessToken}`.'
 externalDocs:
   description: KLS Developer Center
   url: https://developers.kurly.com/
+x-refined-from:
+- kurly-kls-delivery-agency-openapi.yml
+- kurly-kls-fulfillment-openapi.yml
