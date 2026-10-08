@@ -164,6 +164,8 @@ maintainers:
   email: info@apis.io
 
 common:
+- type: RateLimits
+  url: rate-limits/kurly-rate-limits.yml
 - type: CapabilityMap
   url: capabilities/kurly-capability-edges.yml
   name: Kurly Business Capability Map
