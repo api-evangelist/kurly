@@ -1,0 +1,7 @@
+---
+title: "Kafka Streams 윈도우 도입기"
+url: "https://helloworld.kurly.com/blog/2025-kafka-streams-window/"
+date: "2025-12-01"
+feed_url: "https://helloworld.kurly.com/rss.xml"
+---
+재고 정산 처리에 Kafka Streams window를 도입하며 겪은 이야기

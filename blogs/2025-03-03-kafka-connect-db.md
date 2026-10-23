@@ -1,0 +1,7 @@
+---
+title: "Kafka Connect로 DB 데이터 쉽게 연동하기"
+url: "https://helloworld.kurly.com/blog/kafka-connect-pipeline/"
+date: "2025-03-03"
+feed_url: "https://helloworld.kurly.com/rss.xml"
+---
+Kafka Connect와 JDBC 커넥터를 이용해 DB 데이터를 쉽게 Kafka로 전송하는 방법과 발생 가능한 문제를 해결하는 방법을 공유합니다.
