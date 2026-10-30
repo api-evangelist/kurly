@@ -64,76 +64,143 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Kurly (컬리, operated by The Farmers Front) is a South Korean online grocery and lifestyle commerce
-company, known for Market Kurly and its overnight "dawn delivery" (샛별배송) model built on a
-cold-chain fulfillment network.
+Kurly (컬리, operated by The Farmers Front) is a South Korean online grocery and lifestyle commerce company, known for Market Kurly and its overnight "dawn delivery" (샛별배송) model built on a cold-chain fulfillment network. Kurly Logistics Services (KLS) opens that network to contracted shipper clients (화주사) as a B2B Open API spanning three service families: fulfillment (물류대행), where Kurly holds and ships the shipper's stock, covering goods master, inbound receiving, inventory and ledgers, outbound orders and fulfillment plans; delivery agency (배송대행), where the shipper ships from their own warehouse over Kurly's Nextmile last-mile network; and shared delivery tracking. Access is contract-gated — clientId and secretKey are issued only after IP allowlist registration — and Kurly states as policy that KLS does not push data to external systems, so integrations poll rather than subscribe to webhooks.
 
-**Kurly Logistics Services (KLS)** opens that network to contracted shipper clients (화주사) as a B2B
-Open API, documented at [developers.kurly.com](https://developers.kurly.com/) (Korean only).
+**Areas:** Company · Technology · Logistics · Fulfillment · Supply Chain · Delivery · E-Commerce · Grocery · Shipping · Order Management · Inventory · Tracking
 
-## The API surface
+## Kurly on APIs.io
 
-| Service | Korean | What it does | Ops |
-|---|---|---|---|
-| Fulfillment | 물류대행 | Kurly holds and ships the shipper's stock — goods master, inbound receiving, inventory and ledgers, outbound orders, fulfillment plans | 24 |
-| Delivery Agency | 배송대행 | Shipper ships from their own warehouse over Kurly's Nextmile last-mile network | 7 |
-| Delivery Tracking | 배송추적 | Shared waybill tracking, usable by both services | 1 |
-| Authentication | 인증 | clientId/secretKey → Bearer access token | 1 |
+Everything profiled for Kurly is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/kurly/](https://apis.io/providers/kurly/)** — or go straight to one of the APIs or properties below.
 
-## What integrators need to know
+### APIs (3)
 
-- **Access is contract-gated.** There is no self-service signup. A shipper submits its outbound IP
-  allowlist via Kurly's Google Form and receives `clientId` / `secretKey` within 5 business days.
-- **No webhooks, by stated policy.** Kurly does not push data to external systems and recommends
-  periodic polling.
-- **Idempotency is real but per-domain.** Delivery-agency order registration uses a `requestKey`
-  body field (max 50 chars, unique per shipper, never reusable, server-generated if omitted).
-  Inbound receiving uses an `X-Idempotency-Key` header with `X-Timestamp`. Retries must reuse the
-  same key.
-- **Partial success is normal.** SKU registration and bulk order register/cancel return `200` with
-  per-item failures in the body. Never infer success from the status code alone.
-- **Rate limiting is signalled but unquantified.** `429` applies across all APIs; no numeric quotas
-  and no rate-limit headers are published.
-- **The test environment is security-gated** — security training, a signed pledge, and VPN/firewall
-  setup are required before an admin account is issued.
+- [Kurly Authentication API](https://apis.io/apis/kurly/kurly-authentication-api/) — The Authentication API from Kurly — 1 operation(s) for authentication.
+- [Kurly 배송운영 정책 API](https://apis.io/apis/kurly/kurly-default-api/) — The 배송운영 정책 API from Kurly — 26 operation(s) for 배송운영 정책.
+- [Kurly Delivery Tracking (배송추적) API](https://apis.io/apis/kurly/kurly-delivery-tracking-api/) — The Delivery Tracking (배송추적) API from Kurly — 1 operation(s) for delivery tracking (배송추적).
 
-## Artifacts in this repository
+### Published properties
 
-| Artifact | Path | Method |
-|---|---|---|
-| OpenAPI (4 specs, 33 operations) | `openapi/` | generated from Kurly's published reference |
-| Overlays | `overlays/` | generated |
-| Authentication profile | `authentication/` | searched |
-| Conventions (incl. idempotency) | `conventions/` | searched |
-| Error codes | `errors/` | searched |
-| Vocabulary (tracking + inbound states) | `vocabulary/` | searched |
-| Data model | `data-model/` | derived |
-| Lifecycle | `lifecycle/` | searched |
-| Changelog (16 releases) | `changelog/` | searched |
-| Rate limits | `rate-limits/` | searched |
-| Sandbox | `sandbox/` | searched |
-| Conformance | `conformance/` | derived |
-| Domain security | `security/` | probed |
-| Well-known probe | `well-known/` | searched (verified absence) |
-| MCP candidate tools | `mcp/` | derived |
-| Agent skills (4) | `skills/` | generated |
-| Arazzo workflows (3) | `arazzo/` | generated |
-| Agentic access | `agentic-access/` | generated |
-| llms.txt | `llms/` | generated |
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
 
-The OpenAPI documents are an API Evangelist reconstruction: every path, method, summary and response
-status comes from Kurly's own rendered API reference. Request and response **schemas render
-client-side** on developers.kurly.com and are deliberately **not** reproduced — treat each
-operation's `externalDocs` URL as authoritative for payload shapes.
+#### Arazzo workflows (3)
 
-## Not present, and why
+Multi-step workflows that chain operations into a business task.
 
-No SDKs or CLI (Kurly publishes none — its GitHub org
-[thefarmersfront](https://github.com/thefarmersfront) carries no KLS client libraries), no AsyncAPI
-or webhook catalog (no event surface exists, by policy), no OAuth scopes (auth is a bearer
-credential exchange, not OAuth), no status page, no published deprecation policy, no vulnerability
-disclosure programme, and no trust centre or compliance certifications — each verified rather than
-assumed.
+- [Kurly delivery-agency order through to delivery tracking](https://apis.io/arazzos/kurly/kurly-delivery-order-to-tracking/)
+- [Kurly fulfillment outbound order flow](https://apis.io/arazzos/kurly/kurly-fulfillment-order-flow/)
+- [Kurly fulfillment inbound receiving flow](https://apis.io/arazzos/kurly/kurly-inbound-receiving-flow/)
 
-- Contact: logistics-dev@kurlycorp.com
-- Backed by: hongshan
+#### MCP servers (1)
+
+Model Context Protocol servers that expose the API to agents.
+
+- [Kurly Logistics Services (KLS) Open API](https://apis.io/servers/kurly/kurly-kls/)
+
+#### Agentic access (1)
+
+Which operations an agent can call, which act, and which need a human in the loop.
+
+- [Kurly Agentic Access](https://apis.io/agentic-access/kurly/kurly-agentic-access/)
+
+#### Vocabulary (1)
+
+The provider's domain terms, defined.
+
+- [Kurly Vocabulary](https://apis.io/vocabularies/kurly/kurly-vocabulary/)
+
+#### Collections (3)
+
+Postman and Open Collection request collections.
+
+- [Kurly Logistics Services (KLS) Open API Authentication API](https://apis.io/collections/kurly/open-kurly-authentication-api/)
+- [Kurly Logistics Services (KLS) Open API Authentication 배송운영 정책 API](https://apis.io/collections/kurly/open-kurly-default-api/)
+- [Kurly Logistics Services (KLS) Open API Authentication Delivery Tracking (배송추적) API](https://apis.io/collections/kurly/open-kurly-delivery-tracking-api/)
+
+#### Overlays (4)
+
+OpenAPI overlays, including conversational phrasing for each operation.
+
+- [Kurly Auth Overlay](https://apis.io/overlays/kurly/kurly-auth-overlay/)
+- [Kurly Delivery Agency Overlay](https://apis.io/overlays/kurly/kurly-delivery-agency-overlay/)
+- [Kurly Delivery Tracking Overlay](https://apis.io/overlays/kurly/kurly-delivery-tracking-overlay/)
+- [Kurly Fulfillment Overlay](https://apis.io/overlays/kurly/kurly-fulfillment-overlay/)
+
+#### Security (2)
+
+Authentication, trust centre, and vulnerability disclosure.
+
+- [Kurly Authentication](https://apis.io/security/kurly/kurly-authentication/)
+- [Kurly Domain Security](https://apis.io/security/kurly/kurly-domain-security/)
+
+#### Rate limits (1)
+
+Published request limits.
+
+- [Kurly Rate Limits](https://apis.io/rate-limits/kurly/kurly-rate-limits/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
+- [Website](https://kurly.com)
+- [Documentation](https://developers.kurly.com/docs/intro)
+- [Getting started](https://developers.kurly.com/docs/intro)
+- [API reference](https://developers.kurly.com/docs/api)
+- [Sign up](https://developers.kurly.com/docs/auth)
+- [Support](https://developers.kurly.com/docs/faq)
+- [Changelog](https://developers.kurly.com/changelog)
+- [Blog](https://helloworld.kurly.com/)
+- [GitHub](https://github.com/thefarmersfront)
+
+## API Evangelist rating
+
+**Kin Score 32.8** — thin · rubric 0.24.0 · scored 2026-10-17
+
+| Facet | Score |
+|---|---|
+| Discoverability | 78.6 |
+| Contract quality | 46.9 |
+| Contract governance | 19.7 |
+| Operational transparency | 18.4 |
+| Developer ergonomics | 31.5 |
+| Access clarity | 13.2 |
+
+**Agent readiness 34.3** — agent-ready
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | derived (partial credit) |
+| Reversibility Documented | documented (partial credit) |
+| MCP Server | — |
+| Auth Clarity | bearer (partial credit) |
+| Idempotency | documented (partial credit) |
+| Error Semantics | verified |
+| OpenAPI Examples | — |
+| Rate Limit Signal | documented (partial credit) |
+| Event Surface Described | — |
+| Agent Skills | derived (partial credit) |
+| Well Known Catalog | yes |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | — |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
+
+**Regulatory alignment 16.7** — Horizontal (data, software, accessibility, platform)
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/kurly/](https://apis.io/providers/kurly/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Kurly: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/kurly/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
